@@ -1,6 +1,7 @@
 "use client"
 
 import { formatIDR, Product } from "@/app/lib/products";
+import { calculatePrice } from "@/app/lib/utils";
 import { addCart } from "@/lib/actions/cart";
 import Link from "next/link";
 import { startTransition, useActionState, useState } from "react";
@@ -12,7 +13,7 @@ export function ProductDetails({ product, inCart }: { product: Product, inCart: 
   const [days, setDays] = useState(3);
   const [delivery, setDelivery] = useState(false);
 
-  const total = product.pricePerDay * days + (delivery ? 25000 : 0);
+  const total = calculatePrice(product.pricePerDay, days, delivery);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">

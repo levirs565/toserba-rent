@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { formatIDR, products } from "../lib/products";
+import { formatIDR } from "../lib/products";
+import { getCartProducts } from "@/lib/cart";
+import { calculatePrice } from "../lib/utils";
 
-const cartItems = products.slice(0, 2);
+export default async function CartPage() {
+  const cartItems = await getCartProducts();
 
-export default function CartPage() {
   return (
     <div className="space-y-6 text-white">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -24,24 +26,23 @@ export default function CartPage() {
       <div className="grid gap-4">
         {cartItems.map((item) => (
           <div
-            key={item.id}
+            key={item.product.id}
             className="card flex flex-col gap-3 border-white/10 bg-white/90 p-4 text-slate-900 md:flex-row md:items-center md:justify-between"
           >
             <div className="flex items-center gap-3">
               <div
                 className="h-14 w-14 rounded-xl"
-                style={{ background: item.imageColor }}
+                style={{ background: item.product.imageColor }}
               />
               <div>
                 <p className="text-lg font-semibold text-slate-900">
-                  {item.name}
+                  {item.product.name}
                 </p>
-                <p className="text-sm text-slate-600">{item.category}</p>
+                <p className="text-sm text-slate-600">{item.product.category}</p>
               </div>
             </div>
             <div className="text-right text-sm text-slate-800">
-              <p className="font-semibold">{formatIDR(item.pricePerDay)}/hari</p>
-              <p className="text-emerald-600">Status: Menunggu pembayaran</p>
+              <p className="font-semibold">{formatIDR(calculatePrice(item.product.pricePerDay, item.durationDay, item.needDeliver))}</p>
             </div>
           </div>
         ))}
@@ -51,7 +52,7 @@ export default function CartPage() {
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-slate-100">Ringkasan</p>
           <p className="text-lg font-bold text-white">
-            {formatIDR(cartItems.reduce((a, b) => a + b.pricePerDay, 0))}
+            {formatIDR(cartItems.reduce((a, item) => a + calculatePrice(item.product.pricePerDay, item.durationDay, item.needDeliver), 0))}
           </p>
         </div>
         <Link href="/checkout" className="btn btn-primary w-full text-center">
