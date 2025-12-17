@@ -27,5 +27,21 @@ model User {
   verificationState            VerificationState @default(PENDING) @map("verification_state")
   verificationStateChangedTime DateTime?         @map("verification_state_changed_time")
 
+  products Product[]
+
   @@map("users")
+}
+
+model Product {
+  id    String   @id @default(uuid()) @db.Uuid
+  name  String
+  price Int
+  specs String[]
+  stock Int
+
+  userId String @db.Uuid
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("products")
 }

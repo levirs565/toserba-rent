@@ -29,6 +29,11 @@ export const RegisterFormSchema = z
   });
 
 export const LoginFormSchema = z.object({
-  email:  z.email({ error: "Please enter a valid email." }).trim(),
+  email: z.email({ error: "Please enter a valid email." }).trim(),
   password: z.string().trim(),
+});
+
+export const AddProductFormSchema = z.object({
+  name: z.string().min(4, { error: "Be at least 4 characters long" }).trim(),
+  price: z.int(),
 });
