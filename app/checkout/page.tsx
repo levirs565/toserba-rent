@@ -1,84 +1,11 @@
-import Link from "next/link";
-import { formatIDR } from "../lib/products";
+import { getCartProducts } from "@/lib/cart";
+import { Checkout } from "./Checkout";
 
-const paymentOptions = [
-  "Transfer Bank (BCA, Mandiri, BNI)",
-  "Kartu Kredit/Debit",
-  "E-Wallet (OVO, GoPay, Dana)",
-  "Virtual Account",
-  "QRIS",
-];
+export default async function CheckoutPage() {
+  const items = await getCartProducts()
+  const subtotal = items.reduce((a, b) => a + b.durationDay * b.product.pricePerDay, 0)
+  const delivery = items.reduce((a, b) => a + (b.needDeliver ? 25000 : 0), 0)
 
-export default function CheckoutPage() {
-  const total = 320000 + 220000;
-
-  return (
-    <div className="space-y-6 text-white">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm uppercase tracking-[0.18em] text-sky-100">
-            Pembayaran
-          </p>
-          <h1 className="text-3xl font-bold">Selesaikan pembayaran</h1>
-          <p className="text-slate-200">
-            Pilih metode pembayaran favorit, lihat total harga, dan konfirmasi.
-          </p>
-        </div>
-        <Link href="/cart" className="btn btn-ghost border border-white/20">
-          Kembali ke Keranjang
-        </Link>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="card space-y-4 border-white/10 bg-white/10 p-6">
-          <h2 className="text-lg font-semibold text-white">
-            Opsi Pembayaran
-          </h2>
-          <div className="grid gap-3">
-            {paymentOptions.map((option) => (
-              <label
-                key={option}
-                className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-slate-100 hover:border-white/30"
-              >
-                <input type="radio" name="payment" className="h-4 w-4" />
-                {option}
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="card h-fit space-y-4 border-white/10 bg-white/90 p-6 text-slate-900">
-          <h2 className="text-lg font-semibold text-slate-900">
-            Ringkasan Harga
-          </h2>
-          <div className="space-y-2 text-sm text-slate-700">
-            <div className="flex items-center justify-between">
-              <span>Subtotal</span>
-              <span>{formatIDR(total)}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Biaya antar</span>
-              <span>{formatIDR(25000)}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Asuransi</span>
-              <span>{formatIDR(15000)}</span>
-            </div>
-            <div className="flex items-center justify-between border-t border-slate-200 pt-3 text-base font-bold text-slate-900">
-              <span>Total</span>
-              <span>{formatIDR(total + 25000 + 15000)}</span>
-            </div>
-          </div>
-          <button className="btn btn-primary w-full text-center">
-            Bayar Sekarang
-          </button>
-          <p className="text-sm text-slate-600">
-            Setelah pembayaran selesai, status pemesanan akan muncul pada cart
-            Anda.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+  return <Checkout subtotal={subtotal} delivery={delivery}/>
 }
 
