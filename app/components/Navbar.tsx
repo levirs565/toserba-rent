@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import { getCurrentUser } from "@/lib/auth"
 
 const navItems: { href: string; label: string }[] = [
   { href: "/", label: "Beranda" },
@@ -16,7 +17,9 @@ function Icon({ children }: { children: ReactNode }) {
   );
 }
 
-export default function Navbar() {
+export default async function Navbar() {
+  const user = await getCurrentUser();
+
   return (
     <header className="sticky top-0 z-30 border-b border-white/5 bg-[#0f1f38]/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-4">
@@ -44,10 +47,11 @@ export default function Navbar() {
         </form>
 
         <div className="flex items-center gap-3">
-          <Link href="/login" className="btn btn-ghost flex items-center gap-2">
-            <Icon>👤</Icon>
-            <span className="hidden text-sm font-semibold md:block">Login</span>
-          </Link>
+          {!user &&
+            <Link href="/login" className="btn btn-ghost flex items-center gap-2">
+              <Icon>👤</Icon>
+              <span className="hidden text-sm font-semibold md:block">Login</span>
+            </Link>}
           <Link href="/cart" className="btn btn-ghost flex items-center gap-2">
             <Icon>🛒</Icon>
             <span className="hidden text-sm font-semibold md:block">
@@ -57,6 +61,10 @@ export default function Navbar() {
           <Link href="/messages" className="btn btn-primary text-sm">
             Obrolan
           </Link>
+          {user && <div className="flex items-center gap-2">
+            <Icon>👤</Icon>
+            <span className="hidden text-sm font-semibold md:block">{user.name}</span>
+          </div>}
         </div>
       </div>
 
@@ -78,4 +86,3 @@ export default function Navbar() {
     </header>
   );
 }
-

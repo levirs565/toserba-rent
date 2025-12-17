@@ -5,7 +5,7 @@ import { useState } from "react";
 type Step = "otp" | "identity" | "profile";
 
 export default function VerifyPage() {
-  const [step, setStep] = useState<Step>("otp");
+  const [step, setStep] = useState<Step>("identity");
   const [otp, setOtp] = useState("");
   const [files, setFiles] = useState({ ktp: "", selfie: "" });
   const [profile, setProfile] = useState({
@@ -88,19 +88,19 @@ export default function VerifyPage() {
 
       {step === "identity" && (
         <div className="card space-y-4 border-white/10 bg-white/10 p-6">
-          <h2 className="text-lg font-semibold text-white">
+          <h2 className="text-lg font-semibold text-slate-700">
             Unggah KTP & Selfie
           </h2>
-          <p className="text-slate-200">
+          <p className="text-slate-500">
             Kirim foto KTP dan selfie memegang KTP untuk memastikan keaslian.
           </p>
           <div className="grid gap-4 md:grid-cols-2">
-            <label className="space-y-2 text-sm text-slate-100">
+            <label className="space-y-2 text-sm text-slate-100 text-slate-500">
               Foto KTP
               <input
                 type="file"
                 accept="image/*"
-                className="input bg-white/10"
+                className="input bg-white/10 text-slate-700!"
                 onChange={(e) =>
                   setFiles({
                     ...files,
@@ -112,12 +112,12 @@ export default function VerifyPage() {
                 <p className="text-xs text-emerald-200">Terunggah: {files.ktp}</p>
               )}
             </label>
-            <label className="space-y-2 text-sm text-slate-100">
+            <label className="space-y-2 text-sm text-slate-100 text-slate-500">
               Foto selfie dengan KTP
               <input
                 type="file"
                 accept="image/*"
-                className="input bg-white/10"
+                className="input bg-white/10 text-slate-700!"
                 onChange={(e) =>
                   setFiles({
                     ...files,
@@ -140,8 +140,8 @@ export default function VerifyPage() {
 
       {step === "profile" && (
         <div className="card space-y-4 border-white/10 bg-white/10 p-6">
-          <h2 className="text-lg font-semibold text-white">Data diri</h2>
-          <p className="text-slate-200">
+          <h2 className="text-lg font-semibold text-slate-700">Data diri</h2>
+          <p className="text-slate-500">
             Lengkapi informasi alamat, nama, nomor HP, dan foto profil (opsional).
           </p>
           <form
@@ -152,9 +152,9 @@ export default function VerifyPage() {
             }}
           >
             <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-100">Nama</label>
+              <label className="text-sm font-semibold text-slate-500">Nama</label>
               <input
-                className="input bg-white/10"
+                className="input bg-white/10 text-slate-700!"
                 value={profile.name}
                 onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                 placeholder="Nama lengkap sesuai KTP"
@@ -162,11 +162,11 @@ export default function VerifyPage() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-100">
+              <label className="text-sm font-semibold text-slate-500">
                 No HP
               </label>
               <input
-                className="input bg-white/10"
+                className="input bg-white/10 text-slate-700!"
                 value={profile.phone}
                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                 placeholder="08xxxxxxxxxx"
@@ -174,11 +174,11 @@ export default function VerifyPage() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-100">
+              <label className="text-sm font-semibold text-slate-500">
                 Alamat lengkap
               </label>
               <textarea
-                className="input min-h-24 bg-white/10"
+                className="input min-h-24 bg-white/10 text-slate-700!"
                 value={profile.address}
                 onChange={(e) =>
                   setProfile({ ...profile, address: e.target.value })
@@ -188,13 +188,13 @@ export default function VerifyPage() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-100">
+              <label className="text-sm font-semibold text-slate-500">
                 Foto profil (opsional)
               </label>
               <input
                 type="file"
                 accept="image/*"
-                className="input bg-white/10"
+                className="input bg-white/10 text-slate-700!"
                 onChange={(e) =>
                   setProfile({
                     ...profile,

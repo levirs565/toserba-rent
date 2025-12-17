@@ -1,6 +1,11 @@
+'use client'
+
+import { login } from "@/lib/actions/auth";
 import Link from "next/link";
+import { useActionState } from "react";
 
 export default function LoginPage() {
+  const [state, action, pending] = useActionState(login, null)
   return (
     <div className="mx-auto max-w-xl space-y-6 text-white">
       <div className="text-center">
@@ -14,27 +19,34 @@ export default function LoginPage() {
       </div>
 
       <div className="card border-white/10 bg-white/10 p-6 text-slate-50">
-        <form className="space-y-4">
+        <form className="space-y-4" action={action}>
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-100">
+            <label className="text-sm font-semibold text-slate-500">
               Email
             </label>
             <input
+              name="email"
               type="email"
               placeholder="nama@email.com"
-              className="input bg-white/10"
+              className="input bg-white/10 text-slate-700!"
+              defaultValue={state?.email}
             />
+            {state?.errors?.email && <p>{state.errors.email.join(". ")}</p>}
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-100">
+            <label className="text-sm font-semibold text-slate-500">
               Password
             </label>
             <input
+              name="password"
               type="password"
               placeholder="••••••••"
-              className="input bg-white/10"
+              className="input bg-white/10 text-slate-700!"
+              defaultValue={state?.password}
             />
+            {state?.errors?.password && <p>{state.errors.password.join(". ")}</p>}
           </div>
+          {state?.globalError && <p>{state.globalError}</p>}
           <button type="submit" className="btn btn-primary w-full">
             Masuk
           </button>
