@@ -28,6 +28,7 @@ model User {
   verificationStateChangedTime DateTime?         @map("verification_state_changed_time")
 
   products Product[]
+  carts    Cart[]
 
   @@map("users")
 }
@@ -41,7 +42,47 @@ model Product {
 
   userId String @db.Uuid
 
-  user User @relation(fields: [userId], references: [id])
+  user  User   @relation(fields: [userId], references: [id])
+  rents Rent[]
 
   @@map("products")
+}
+
+// RELASI Salah
+model Cart {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId    String  @map("user_id") @db.Uuid
+  paymentId String? @map("payment_id") @db.Uuid
+
+  user    User     @relation(fields: [userId], references: [id])
+  rents   Rent[]
+  payment Payment? @relation(fields: [paymentId], references: [id])
+
+  @@map("carts")
+}
+
+// RELASI SALAH
+model Rent {
+  id          String   @id @default(uuid()) @db.Uuid
+  startDate   DateTime? @map("start_date") @db.Date
+  durationDay Int      @map("duration_day")
+  rentPrice   Int?     @map("rent_price")
+  needDeliver Boolean  @map("need_deliver")
+
+  productId String @map("product_id") @db.Uuid
+  cartId    String @map("cart_id") @db.Uuid
+
+  product Product @relation(fields: [productId], references: [id])
+  cart    Cart    @relation(fields: [cartId], references: [id])
+
+  @@map("rents")
+}
+
+model Payment {
+  id     String  @id @default(uuid()) @db.Uuid
+  amount Int
+  isPaid Boolean @map("is_paid")
+
+  carts Cart[]
 }

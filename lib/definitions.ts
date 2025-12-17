@@ -37,3 +37,12 @@ export const AddProductFormSchema = z.object({
   name: z.string().min(4, { error: "Be at least 4 characters long" }).trim(),
   price: z.int(),
 });
+
+
+export const AddCartSchema = z.object({
+  id: z.uuid(),
+  durationDay: z.int(),
+  needDeliver: z.boolean()
+})
+
+export type AddCartData = z.infer<typeof AddCartSchema>

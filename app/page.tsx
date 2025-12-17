@@ -1,26 +1,12 @@
-"use client";
-
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { formatIDR, products } from "./lib/products";
+import { formatIDR } from "./lib/products";
+import { getAllProducts } from "@/lib/products";
 
-const featured = products.slice(0, 4);
 
-export default function Home() {
-  const categories = useMemo(
-    () => ["Semua", ...Array.from(new Set(products.map((p) => p.category)))],
-    []
-  );
-  const [selected, setSelected] = useState("Semua");
+export default async function Home() {
+  const products = await getAllProducts();
 
-  const filtered = useMemo(
-    () =>
-      selected === "Semua"
-        ? products
-        : products.filter((p) => p.category === selected),
-    [selected]
-  );
-
+  const featured = products.slice(0, 4);
   return (
     <div className="space-y-10 text-white">
       <section className="card relative overflow-hidden border-white/10 bg-linear-to-br from-[#10213c] via-[#0f1f38] to-[#0d1b2a] px-6 py-10 text-white">
@@ -97,11 +83,10 @@ export default function Home() {
                       {formatIDR(product.pricePerDay)}/hari
                     </p>
                     <p
-                      className={`pill ${
-                        product.status === "ready"
+                      className={`pill ${product.status === "ready"
                           ? "bg-emerald-100 text-emerald-700"
                           : "bg-amber-100 text-amber-700"
-                      }`}
+                        }`}
                     >
                       {product.status === "ready" ? "Siap" : "Disewakan"}
                     </p>
@@ -136,23 +121,10 @@ export default function Home() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelected(cat)}
-              className={`pill border ${
-                selected === cat
-                  ? "border-sky-200 bg-white/20 text-white"
-                  : "border-white/20 bg-white/10 text-slate-200 hover:bg-white/20"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((product) => (
+          {products.map((product) => (
             <Link
               href={`/products/${product.id}`}
               key={product.id}
@@ -168,11 +140,10 @@ export default function Home() {
                     {product.category}
                   </p>
                   <span
-                    className={`pill ${
-                      product.status === "ready"
+                    className={`pill ${product.status === "ready"
                         ? "bg-emerald-100 text-emerald-700"
                         : "bg-amber-100 text-amber-800"
-                    }`}
+                      }`}
                   >
                     {product.status === "ready" ? "Siap" : "Disewakan"}
                   </span>
