@@ -7,7 +7,7 @@ import { startTransition, useActionState, useState } from "react";
 
 const durations = [1, 3, 5, 7, 14];
 
-export function ProductDetails({ product }: { product: Product }) {
+export function ProductDetails({ product, inCart }: { product: Product, inCart: boolean }) {
   const [cartState, cartAction, _cartPending] = useActionState(addCart, null)
   const [days, setDays] = useState(3);
   const [delivery, setDelivery] = useState(false);
@@ -145,7 +145,7 @@ export function ProductDetails({ product }: { product: Product }) {
         </div>
 
         <div className="flex flex-col gap-3">
-          {!cartState?.success &&
+          {!(cartState?.success || inCart) &&
             <>
               <button
                 onClick={() => startTransition(() => cartAction({ id: product.id, durationDay: days, needDeliver: delivery }))}
@@ -163,7 +163,7 @@ export function ProductDetails({ product }: { product: Product }) {
           }
         </div>
 
-        {cartState?.success && (
+        {(cartState?.success || inCart) && (
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
             Telah ditambahkan ke Keranjang
           </div>
