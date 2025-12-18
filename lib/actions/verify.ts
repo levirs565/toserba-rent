@@ -5,6 +5,7 @@ import { hasKtp } from "../auth";
 import prisma from "../prisma";
 import { getSession } from "../session";
 import { storage } from "../storage";
+import { redirect } from "next/navigation";
 
 export async function sendKtp(state: any, formData: FormData) {
   const userId = (await getSession()).userId;
@@ -50,9 +51,26 @@ export async function sendKtp(state: any, formData: FormData) {
     data: {
       hasKtp: true,
       verificationState: VerificationState.PENDING,
-      verificationStateChangedTime: new Date()
+      verificationStateChangedTime: new Date(),
     },
   });
 
   return { success: true };
+}
+
+export async function setVerificationState(userId: string, action: string) {
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      verificationState:
+        action == "accept"
+          ? VerificationState.ACCEPTED
+          : VerificationState.REJECTED,
+      verificationStateChangedTime: new Date(),
+    },
+  });
+
+  redirect("/admin/verify")
 }
