@@ -86,7 +86,7 @@ export async function getAllProducts(query: string | undefined) {
           rents: {
             where: {
               requestState: {
-                not: RequestState.REJECTED
+                not: RequestState.REJECTED,
               },
               cart: {
                 paymentId: {
@@ -122,6 +122,32 @@ export async function getProduct(id: string) {
     where: {
       id,
     },
+    include: {
+      _count: {
+        select: {
+          rents: {
+            where: {
+              requestState: {
+                not: RequestState.REJECTED,
+              },
+              cart: {
+                paymentId: {
+                  not: null,
+                },
+              },
+              OR: [
+                { rentReturn: null },
+                {
+                  rentReturn: {
+                    paymentId: null,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
   });
 
   if (!product) return null;
@@ -131,10 +157,7 @@ export async function getProduct(id: string) {
     name: product.name,
     category: "Other",
     pricePerDay: product.price,
-    status: "ready",
-    location: "",
-    description: "",
-    imageColor: "",
+    status: product._count.rents > 0 ? "rented" : "ready",
     userId: product.userId,
   };
 }

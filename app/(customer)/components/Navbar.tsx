@@ -87,10 +87,6 @@ export default async function Navbar() {
             {item.label}
           </Link>
         ))}
-        <div className="ml-auto flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200">
-          <span className="h-2 w-2 rounded-full bg-emerald-400" />
-          Live chat siap membantu
-        </div>
       </div>
     </header>
   );

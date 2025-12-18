@@ -26,7 +26,7 @@ export function ProductDetails({ product, inCart, userId }: { product: Product, 
   return (
     <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
       <div className="card overflow-hidden border-white/10 bg-white/90">
-        <div className="relative h-72" style={{ background: product.imageColor }}>
+        <div className="relative h-72">
           <span className="absolute left-4 top-4 rounded-full bg-black/40 px-3 py-1 text-xs font-semibold uppercase text-white">
             {product.category}
           </span>
@@ -37,7 +37,7 @@ export function ProductDetails({ product, inCart, userId }: { product: Product, 
               <h1 className="text-2xl font-bold text-slate-900">
                 {product.name}
               </h1>
-              <p className="text-slate-500">{product.location}</p>
+              {/* <p className="text-slate-500">{product.location}</p> */}
             </div>
             <span
               className={`pill ${product.status === "ready"
@@ -45,10 +45,10 @@ export function ProductDetails({ product, inCart, userId }: { product: Product, 
                 : "bg-amber-100 text-amber-700"
                 }`}
             >
-              {product.status === "ready" ? "Siap" : "Disewakan"}
+              {product.status === "ready" ? "Tersedia" : "Disewakan"}
             </span>
           </div>
-          <p className="text-slate-700">{product.description}</p>
+          {/* <p className="text-slate-700">{product.description}</p> */}
           <div className="grid grid-cols-2 gap-3 text-sm text-slate-700">
             <div className="rounded-xl bg-slate-50 p-3">
               <p className="text-slate-500">Harga</p>
@@ -173,12 +173,13 @@ export function ProductDetails({ product, inCart, userId }: { product: Product, 
             </div>
           )}
 
-          <Link
-            href={`/products/${product.id}/checkout?` + createCheckoutParams()}
-            className="btn w-full bg-slate-900 text-center text-white hover:bg-slate-800"
-          >
-            Sewa Sekarang
-          </Link>
+          {product.status == "ready" &&
+            <Link
+              href={`/products/${product.id}/checkout?` + createCheckoutParams()}
+              className="btn w-full bg-slate-900 text-center text-white! hover:bg-slate-800"
+            >
+              Sewa Sekarang
+            </Link>}
         </div>
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
