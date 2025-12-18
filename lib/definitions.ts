@@ -33,16 +33,28 @@ export const LoginFormSchema = z.object({
   password: z.string().trim(),
 });
 
+export const SendProfileSchema = z.object({
+  nik: z
+    .string()
+    .length(16, { error: "Must 16 character" })
+    .regex(/^\d+$/, { error: "All must digit" })
+    .trim(),
+  birthPlace: z
+    .string()
+    .min(2, { error: "Name must be at least 2 characters long." })
+    .trim(),
+  birthDate: z.date(),
+});
+
 export const AddProductFormSchema = z.object({
   name: z.string().min(4, { error: "Be at least 4 characters long" }).trim(),
   price: z.int(),
 });
 
-
 export const AddCartSchema = z.object({
   id: z.uuid(),
   durationDay: z.int(),
-  needDeliver: z.boolean()
-})
+  needDeliver: z.boolean(),
+});
 
-export type AddCartData = z.infer<typeof AddCartSchema>
+export type AddCartData = z.infer<typeof AddCartSchema>;

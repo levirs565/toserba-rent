@@ -15,7 +15,7 @@ export default async function ProductDetail({
     "Email": user.email,
     "Nomor Telepon": user.phone,
     "NIK": user.nik,
-    "Tempat/Tanggal Lahir": `${user.birthPlace}, ${user.birthDate}`
+    "Tempat/Tanggal Lahir": `${user.birthPlace}, ${user.birthDate?.toISOString().split('T')[0]}`
   })
 
   return <div className="space-y-6 text-white">

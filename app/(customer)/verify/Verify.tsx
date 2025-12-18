@@ -2,13 +2,21 @@
 
 import { useState } from "react";
 import { IdentityStep } from "./IdentityStep";
+import { ProfileStep } from "./ProfileStep";
 
-type Step = "identity" | "wait";
+type Step = "identity" | "profile" | "wait";
 
-export default function Verify({ hasKtpImage, isWaiting, isRejected }: { hasKtpImage: boolean, isWaiting: boolean, isRejected: boolean }) {
+const stepTitleMap: Record<Step, String> = {
+  "identity": "KTP & Selfie",
+  "profile": "Data Diri",
+  "wait": "Menunggu Persetujuan Admin"
+}
+
+export default function Verify({ hasKtpImage, isWaiting, isRejected, nik, birthPlace, birthDate }:
+  { hasKtpImage: boolean, isWaiting: boolean, isRejected: boolean, nik?: string, birthPlace?: string, birthDate?: Date  }) {
   const [step, setStep] = useState<Step>(isWaiting ? "wait" : "identity");
 
-  const stepOrder: Step[] = ["identity", "wait"];
+  const stepOrder: Step[] = ["identity", "profile", "wait"];
   const currentIndex = stepOrder.indexOf(step);
 
   const nextStep = () => {
@@ -26,12 +34,9 @@ export default function Verify({ hasKtpImage, isWaiting, isRejected }: { hasKtpI
           <h1 className="text-3xl font-bold">Lakukan Verifikasi Identitas</h1>
           {isRejected &&
             <p className="text-red-300">
-              identitas Anda Ditolak
+              Identitas Anda Ditolak
             </p>
           }
-          <p className="text-slate-200">
-            Setelah mendaftar, unggah KTP & selfie.
-          </p>
         </div>
         <div className="flex items-center gap-2">
           {stepOrder.map((item, idx) => (
@@ -43,9 +48,7 @@ export default function Verify({ hasKtpImage, isWaiting, isRejected }: { hasKtpI
                 }`}
             >
               {idx + 1}.{" "}
-              {item === "identity"
-                ? "KTP & Selfie"
-                : "Menunggu Persetujuan Admin"}
+              {stepTitleMap[step]}
             </span>
           ))}
         </div>
@@ -53,6 +56,8 @@ export default function Verify({ hasKtpImage, isWaiting, isRejected }: { hasKtpI
 
 
       {step === "identity" && <IdentityStep hasImage={hasKtpImage} onNextStep={nextStep} />}
+
+      {step === "profile" && <ProfileStep onNextStep={nextStep} nik={nik} birthPlace={birthPlace} birthDate={birthDate} />}
 
       {step === "wait" && (
         <div className="card space-y-4 border-white/10 bg-white/10 p-6">
