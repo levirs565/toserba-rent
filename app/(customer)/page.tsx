@@ -33,7 +33,6 @@ export default async function Home({
             >
               <div
                 className="h-40 w-full"
-                style={{ background: product.imageColor }}
               />
               <div className="flex flex-1 flex-col gap-3 p-4">
                 <div className="flex items-center justify-between">
@@ -46,18 +45,15 @@ export default async function Home({
                         : "bg-amber-100 text-amber-800"
                       }`}
                   >
-                    {product.status === "ready" ? "Siap" : "Disewakan"}
+                    {product.status === "ready" ? "Tersedia" : "Disewakan"}
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-slate-900">
                   {product.name}
                 </h3>
-                <p className="text-sm text-slate-600 line-clamp-2">
-                  {product.description}
-                </p>
                 <div className="mt-auto flex items-center justify-between text-sm font-semibold text-slate-900">
                   <span>{formatIDR(product.pricePerDay)}/hari</span>
-                  <span className="text-slate-500">{product.location}</span>
+                  {/* <span className="text-slate-500">{product.location}</span> */}
                 </div>
               </div>
             </Link>

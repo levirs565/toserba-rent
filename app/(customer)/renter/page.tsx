@@ -31,7 +31,7 @@ export default async function ProviderPage() {
               </p>
 
               <form className="mt-2 flex flex-row gap-3">
-                 <Link href={`/products/${rent.product.id}`} className="block btn flex-grow btn-primary text-center">Lihat Poduk</Link>
+                <Link href={`/products/${rent.product.id}`} className="block btn flex-grow btn-primary text-center">Lihat Poduk</Link>
                 <Link href={`/messages/${rent.product.userId}`} className="block btn flex-grow btn-primary text-center">Chat Pemilik</Link>
                 {((!rent.rentReturn?.requestState && rent.requestState == "ACCEPTED") || (rent.rentReturn?.requestState == "REJECTED")) && <button formAction={returnRent.bind(null, rent.id)} className="btn btn-primary text-center">
                   Kembalikan

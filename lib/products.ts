@@ -31,27 +31,29 @@ export async function getUserProducts() {
     },
   });
 
-  const returnRequestCount = (await prisma.product.findMany({
-    where: {
-      userId,
-    },
-    select: {
-      id: true,
-      _count: {
-        select: {
-          rents: {
-            where: {
-              rentReturn: {
-                requestState: "PENDING",
+  const returnRequestCount = (
+    await prisma.product.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+        _count: {
+          select: {
+            rents: {
+              where: {
+                rentReturn: {
+                  requestState: "PENDING",
+                },
               },
             },
           },
         },
       },
-    },
-  })).reduce((prev, current) => {
-    prev.set(current.id, current._count.rents)
-    return prev
+    })
+  ).reduce((prev, current) => {
+    prev.set(current.id, current._count.rents);
+    return prev;
   }, new Map<string, number>());
 
   return products.map((product) => ({
@@ -64,29 +66,54 @@ export async function getUserProducts() {
     description: "",
     imageColor: "",
     requestCount: product._count.rents,
-    returnRequestCount: returnRequestCount.get(product.id) ?? 0
+    returnRequestCount: returnRequestCount.get(product.id) ?? 0,
   }));
 }
 
 export async function getAllProducts(query: string | undefined) {
-  const products = await prisma.product.findMany(query ? {
-    where: {
-      name: {
-        contains: query,
-        mode: "insensitive"
-      }
-    }
-  } : undefined);
+  const products = await prisma.product.findMany({
+    where: query
+      ? {
+          name: {
+            contains: query,
+            mode: "insensitive",
+          },
+        }
+      : undefined,
+    include: {
+      _count: {
+        select: {
+          rents: {
+            where: {
+              requestState: {
+                not: RequestState.REJECTED
+              },
+              cart: {
+                paymentId: {
+                  not: null,
+                },
+              },
+              OR: [
+                { rentReturn: null },
+                {
+                  rentReturn: {
+                    paymentId: null,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  });
 
   return products.map((product) => ({
     id: product.id,
     name: product.name,
     category: "Other",
     pricePerDay: product.price,
-    status: "ready",
-    location: "",
-    description: "",
-    imageColor: "",
+    status: product._count.rents > 0 ? "rented" : "ready",
   }));
 }
 
@@ -108,7 +135,7 @@ export async function getProduct(id: string) {
     location: "",
     description: "",
     imageColor: "",
-    userId: product.userId
+    userId: product.userId,
   };
 }
 
@@ -146,9 +173,9 @@ export async function getProductWithRent(id: string) {
             select: {
               date: true,
               requestState: true,
-              paymentId: true
-            }
-          }
+              paymentId: true,
+            },
+          },
         },
       },
     },
@@ -175,7 +202,7 @@ export async function getProductWithRent(id: string) {
         id: rent.cart.user.id,
         name: rent.cart.user.name,
       },
-      rentReturn: rent.rentReturn
+      rentReturn: rent.rentReturn,
     })),
   };
 }

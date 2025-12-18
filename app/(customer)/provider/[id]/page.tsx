@@ -69,8 +69,8 @@ export default async function ProductDetail({
               className={`mt-2 pill bg-amber-100 text-amber-700`}
             >Menunggu Pembayaran</span>}
 
-          <form className="flex flex-row gap-3">
-            <Link href={`/messages/${rent.user.id}`} className="btn flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
+          <form className="flex flex-row gap-3 mt-2">
+            <Link href={`/messages/${rent.user.id}`} className="block btn flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
             {rent.rentReturn?.requestState == "PENDING" && <>
               <button formAction={setRentReturnRequestResult.bind(null, rent.id, false)} className="btn flex-grow btn-ghost text-center text-red-500!">
                 Tolak Pengembalian
@@ -102,8 +102,8 @@ export default async function ProductDetail({
           <p className="text-sm text-slate-500">
             {rent.needDeliver ? "Perlu Dikirim" : "Diambil Sendiri"}
           </p>
-          <form className="flex flex-row gap-3">
-            <Link href={`/messages/${rent.user.id}`} className="btn flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
+          <form className="flex flex-row gap-3 mt-2">
+            <Link href={`/messages/${rent.user.id}`} className="block btn flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
             <button formAction={setRentRequestResult.bind(null, rent.id, false)} className="btn flex-grow btn-ghost text-center text-red-500!">
               Tolak
             </button>
@@ -139,7 +139,7 @@ export default async function ProductDetail({
             className={`mt-2 pill bg-amber-100 text-amber-700`}
           >{rent.requestState == RequestState.REJECTED ? "Ditolak" : "Selesai"}</span>
           <form className="flex flex-row gap-3 mt-2">
-            <Link href={`/messages/${rent.user.id}`} className="btn flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
+            <Link href={`/messages/${rent.user.id}`} className="btn block flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
           </form>
         </div>)}
 

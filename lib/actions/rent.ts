@@ -52,25 +52,26 @@ export async function returnRent(rentId: string) {
       id: rentId,
     },
     select: {
+      cart: {
+        select: {
+          userId: true
+        }
+      },
       requestState: true,
       rentReturn: {
         select: {
           requestState: true,
         },
       },
-      product: {
-        select: {
-          userId: true,
-        },
-      },
     },
   });
 
   if (!rent) return;
-  if (rent.product.userId != userId) return;
+  if (rent.cart.userId != userId) return;
   if (rent.requestState != RequestState.ACCEPTED) return;
   if (rent.rentReturn && rent.rentReturn.requestState != RequestState.REJECTED)
     return;
+
 
   await prisma.rentReturn.upsert({
     where: {
