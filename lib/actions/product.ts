@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 export async function addProduct(state: any, formData: FormData) {
   const fields = {
     name: String(formData.get("name")),
+    category: String(formData.get("category")),
     price: parseInt(String(formData.get("price"))),
   };
   const validatedFields = AddProductFormSchema.safeParse(fields);
@@ -33,9 +34,23 @@ export async function addProduct(state: any, formData: FormData) {
       name: data.name,
       price: data.price,
       stock: 1,
-      userId: userId,
+      user: {
+        connect: {
+          id: userId
+        }
+      },
+      category: {
+        connectOrCreate: {
+          where: {
+            name: data.category
+          },
+          create: {
+            name: data.category
+          }
+        }
+      },
     },
   });
 
-  redirect("/provider")
+  redirect("/provider");
 }

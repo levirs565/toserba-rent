@@ -59,12 +59,22 @@ model Product {
   specs String[]
   stock Int
 
-  userId String @db.Uuid
+  userId     String  @db.Uuid
+  categoryId String? @map("category_id") @db.Uuid
 
-  user  User   @relation(fields: [userId], references: [id])
-  rents Rent[]
+  user     User             @relation(fields: [userId], references: [id])
+  category ProductCategory? @relation(fields: [categoryId], references: [id])
+  rents    Rent[]
 
   @@map("products")
+}
+
+model ProductCategory {
+  id       String    @id @default(uuid()) @db.Uuid
+  name     String    @unique
+  products Product[]
+
+  @@map("product_categories")
 }
 
 // RELASI Salah
@@ -134,8 +144,8 @@ model Payment {
 
 model ChatMessage {
   id      String   @id @default(uuid()) @db.Uuid
-  fromId String   @db.Uuid @map("from_id")
-  toId   String   @db.Uuid @map("to_id")
+  fromId  String   @map("from_id") @db.Uuid
+  toId    String   @map("to_id") @db.Uuid
   date    DateTime @default(now())
   message String
 

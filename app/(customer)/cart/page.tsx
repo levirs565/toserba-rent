@@ -38,10 +38,9 @@ export default async function CartPage() {
                       : "bg-amber-100 text-amber-800"
                       }`}
                   >
-                    {item.product.status === "ready" ? "Tersedia" : "Disewakan"}
+                    {item.product.status === "ready" ? "Tersedia " : "Disewakan "}
                   </span>
-                  {item.product.category}
-
+                  <span className="capitalize">{item.product.category}</span>
                 </p>
               </div>
             </div>

@@ -14,6 +14,11 @@ export async function getUserProducts() {
       userId,
     },
     include: {
+      category: {
+        select: {
+          name: true
+        },
+      },
       _count: {
         select: {
           rents: {
@@ -59,7 +64,8 @@ export async function getUserProducts() {
   return products.map((product) => ({
     id: product.id,
     name: product.name,
-    category: "Other",
+    category: product.category?.name ?? "Other",
+    // TODO: Sratus
     pricePerDay: product.price,
     status: "ready",
     location: "",
@@ -81,6 +87,11 @@ export async function getAllProducts(query: string | undefined) {
         }
       : undefined,
     include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
       _count: {
         select: {
           rents: {
@@ -111,7 +122,7 @@ export async function getAllProducts(query: string | undefined) {
   return products.map((product) => ({
     id: product.id,
     name: product.name,
-    category: "Other",
+    category: product.category?.name ?? "Other",
     pricePerDay: product.price,
     status: product._count.rents > 0 ? "rented" : "ready",
   }));
@@ -123,6 +134,11 @@ export async function getProduct(id: string) {
       id,
     },
     include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
       _count: {
         select: {
           rents: {
@@ -155,7 +171,7 @@ export async function getProduct(id: string) {
   return {
     id: product.id,
     name: product.name,
-    category: "Other",
+    category: product.category?.name ?? "Other",
     pricePerDay: product.price,
     status: product._count.rents > 0 ? "rented" : "ready",
     userId: product.userId,
@@ -168,6 +184,11 @@ export async function getProductWithRent(id: string) {
       id,
     },
     include: {
+      category: {
+        select: {
+          name: true
+        }
+      },
       rents: {
         where: {
           cart: {
@@ -209,7 +230,7 @@ export async function getProductWithRent(id: string) {
   return {
     id: product.id,
     name: product.name,
-    category: "Other",
+    category: product.category?.name ?? "Other",
     pricePerDay: product.price,
     status: "ready",
     location: "",

@@ -33,6 +33,11 @@ export async function getCartProducts() {
           durationDay: true,
           product: {
             include: {
+              category: {
+                select: {
+                  name: true,
+                },
+              },
               _count: {
                 select: {
                   rents: {
@@ -71,7 +76,7 @@ export async function getCartProducts() {
     product: {
       id: rent.product.id,
       name: rent.product.name,
-      category: "Other",
+      category: rent.product.category?.name ?? "Other",
       pricePerDay: rent.product.price,
       status: rent.product._count.rents > 0 ? "rented" : "ready",
       location: "",

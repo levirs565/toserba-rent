@@ -27,7 +27,7 @@ export function ProductDetails({ product, inCart, userId }: { product: Product, 
     <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
       <div className="card overflow-hidden border-white/10 bg-white/90">
         <div className="relative h-72">
-          <span className="absolute left-4 top-4 rounded-full bg-black/40 px-3 py-1 text-xs font-semibold uppercase text-white">
+          <span className="absolute left-4 top-4 rounded-full bg-black/40 px-3 py-1 text-xs font-semibold capitalize text-white">
             {product.category}
           </span>
         </div>

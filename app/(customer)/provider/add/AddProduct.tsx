@@ -30,9 +30,12 @@ export function AddProduct() {
           Kategori
         </label>
         <input
+          name="category"
           className="input bg-white/10 text-slate-700!"
+          defaultValue={state?.category}
           placeholder="Kamera, Audio, Fashion..."
         />
+        {state?.errors.category && <p>{state.errors.category}</p>}
       </div>
       <div className="space-y-1">
         <label className="text-sm font-semibold text-slate-500">

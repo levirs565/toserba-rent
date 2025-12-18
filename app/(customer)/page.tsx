@@ -36,7 +36,7 @@ export default async function Home({
               />
               <div className="flex flex-1 flex-col gap-3 p-4">
                 <div className="flex items-center justify-between">
-                  <p className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                  <p className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 capitalize">
                     {product.category}
                   </p>
                   <span

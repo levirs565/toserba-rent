@@ -28,7 +28,7 @@ export default async function ProviderPage() {
             <div>
               <p className="font-semibold text-slate-900">{item.name}</p>
               <p className="text-slate-600">
-                {item.category} · {formatIDR(item.pricePerDay)}/hari
+                <span className="capitalize">{item.category}</span> · {formatIDR(item.pricePerDay)}/hari
               </p>
             </div>
             {
