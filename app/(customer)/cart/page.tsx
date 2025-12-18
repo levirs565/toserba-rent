@@ -18,7 +18,7 @@ export default async function CartPage() {
             Status pemesanan akan muncul setelah pembayaran selesai.
           </p>
         </div>
-        <Link href="/checkout" className="btn btn-primary">
+        <Link href="/cart/checkout" className="btn btn-primary">
           Lanjut ke Pembayaran
         </Link>
       </div>
@@ -55,7 +55,7 @@ export default async function CartPage() {
             {formatIDR(cartItems.reduce((a, item) => a + calculatePrice(item.product.pricePerDay, item.durationDay, item.needDeliver), 0))}
           </p>
         </div>
-        <Link href="/checkout" className="btn btn-primary w-full text-center">
+        <Link href="/cart/checkout" className="btn btn-primary w-full text-center">
           Proses Pembayaran
         </Link>
         <p className="text-sm text-slate-200">
