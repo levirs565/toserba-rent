@@ -54,3 +54,43 @@ export async function getCurrentUser() {
 
   return await getUser(session.userId);
 }
+
+export async function getCurrentUserProfile() {
+  const session = await getSession();
+
+  if (!session.userId) return null;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: session.userId,
+    },
+    select: {
+      birthDate: true,
+      birthPlace: true,
+      email: true,
+      phone: true,
+      hasKtp: true,
+      hasProfile: true,
+      name: true,
+      nik: true,
+      verificationState: true,
+      verificationStateChangedTime: true,
+      userAddresses: {
+        select: {
+          id: true,
+          name: true,
+          address: true,
+        },
+      },
+    },
+  });
+
+  if (!user) return;
+
+  const { userAddresses, ...rest } = user;
+
+  return {
+    ...rest,
+    addresses: userAddresses,
+  };
+}

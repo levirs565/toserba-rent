@@ -58,3 +58,8 @@ export const AddCartSchema = z.object({
 });
 
 export type AddCartData = z.infer<typeof AddCartSchema>;
+
+export const AddAddressSchema = z.object({
+  name: z.string().min(4, { error: "Be at least 4 characters long" }).trim(),
+  address: z.string().min(4, { error: "Be at least 4 characters long" }).trim(),
+});

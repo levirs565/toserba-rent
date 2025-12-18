@@ -1,62 +1,69 @@
+import { VerificationState } from "@/app/generated/prisma/enums";
+import { getCurrentUser, getCurrentUserProfile } from "@/lib/user";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { use } from "react";
 
-export default function UserInfoPage() {
+const statusMap: Record<VerificationState, String> = {
+  ACCEPTED: "Diterima",
+  PENDING: "Menunggu Peresetujuan",
+  REJECTED: "Ditolak"
+}
+
+export default async function UserInfoPage() {
+  const user = await getCurrentUserProfile();
+
+  if (!user) return notFound();
+
+  const fields = Object.entries({
+    "Email": user.email,
+    "Nomor Telepon": user.phone,
+    "Tempat/Tanggal Lahir": `${user.birthPlace ?? "-"}, ${user.birthDate?.toISOString().split('T')[0] ?? "-"}`,
+    "Status Verifikasi": user.verificationStateChangedTime ? statusMap[user.verificationState] : "Belum Mengirim Identitas"
+  })
+
   return (
     <div className="space-y-6 text-white">
       <div>
-        <p className="text-sm uppercase tracking-[0.18em] text-sky-100">
-          Informasi Pengguna
-        </p>
-        <h1 className="text-3xl font-bold">Profil & status sewa</h1>
-        <p className="text-slate-200">
-          Kelola data akun dan daftar sebagai penyedia barang sewaan.
-        </p>
+        <h1 className="text-3xl font-bold">Profil Pengguna</h1>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="card space-y-3 border-white/10 bg-white/10 p-6">
-          <h2 className="text-lg font-semibold text-white">Detail Akun</h2>
-          <div className="space-y-2 text-sm text-slate-200">
-            <p>Nama: Alex Santoso</p>
-            <p>Email: alex@toserba.id</p>
-            <p>Member sejak: 2024</p>
-          </div>
-          <Link
-            href="/provider"
-            className="btn btn-primary w-full text-center text-sm"
-          >
-            Daftar sebagai penyedia barang sewaan
-          </Link>
+          <h2 className="text-lg font-semibold text-slate-900">Detail Akun</h2>
+          {fields.map(([key, value]) => <div className="rounded-xl bg-slate-50 p-3 border border-slate-200" key={key}>
+            <p className="text-sm text-slate-500">{key}</p>
+            <p className="text-sm font-semibold text-slate-900">
+              {value}
+            </p>
+          </div>)}
+
+          {user.verificationState != "ACCEPTED" && <Link href="/verify" className="block btn flex-grow btn-primary text-center">
+            Halaman Verifikasi Identitas
+          </Link>}
         </div>
 
         <div className="card space-y-3 border-white/10 bg-white/90 p-6 text-slate-900">
           <h2 className="text-lg font-semibold text-slate-900">
-            Status Sewa Terbaru
+            Alamat
           </h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm">
-              <div>
-                <p className="font-semibold text-slate-900">
-                  Kamera Mirrorless A7
-                </p>
-                <p className="text-slate-600">Durasi: 3 hari · Antar</p>
-              </div>
-              <span className="pill bg-emerald-100 text-emerald-700">
-                Sedang dikirim
-              </span>
-            </div>
-            <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm">
-              <div>
-                <p className="font-semibold text-slate-900">
-                  Paket Camping 4 Orang
-                </p>
-                <p className="text-slate-600">Durasi: 2 hari · Ambil sendiri</p>
-              </div>
-              <span className="pill bg-slate-200 text-slate-800">
-                Selesai
-              </span>
-            </div>
-          </div>
+
+          {user.addresses.map((address) => <div className="rounded-xl bg-slate-50 p-3 border border-slate-200" key={address.id}>
+            <p className="text-sm font-semibold text-slate-900">{address.name}</p>
+            <p className="text-sm text-slate-500">
+              {address.address}
+            </p>
+          </div>)}
+          {user.addresses.length == 0 &&
+            <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
+              <p className="text-sm font-semibold text-slate-900">
+                Belum Ada Alamat
+              </p>
+            </div>}
+
+          <Link href="/user/address/add" className="block btn flex-grow btn-primary text-center">
+            Tambah Alamat
+          </Link>
         </div>
       </div>
     </div>

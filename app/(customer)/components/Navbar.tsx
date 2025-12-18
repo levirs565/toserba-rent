@@ -61,10 +61,17 @@ export default async function Navbar() {
           <Link href="/messages" className="btn btn-primary text-sm">
             Obrolan
           </Link>
-          {user && <div className="flex items-center gap-2">
+          {user && <Link href="/user" className="flex items-center gap-2">
             <Icon>👤</Icon>
-            <span className="hidden text-sm font-semibold md:block">{user.name}</span>
-          </div>}
+            <div className="flex flex-col">
+              <span className="hidden text-sm font-semibold md:block">{user.name}</span>
+              {user.verification != "ACCEPTED" &&
+                <span className="hidden text-xs font-semibold md:block text-red-300">
+                  {user.verification == "PENDING" ? "Menunggu Verifikasi Admin"
+                    : user.verification == "REJECTED" ? "Identitas Ditolak"
+                      : "Verifikasi Identitas Diperlukan"}</span>}
+            </div>
+          </Link>}
         </div>
       </div>
 

@@ -12,6 +12,8 @@ export async function getCurrentUser() {
     },
     select: {
       name: true,
+      verificationState: true,
+      verificationStateChangedTime: true
     },
   });
 
@@ -19,6 +21,7 @@ export async function getCurrentUser() {
 
   return {
     name: data.name,
+    verification: data.verificationStateChangedTime ? data.verificationState : null
   };
 }
 
