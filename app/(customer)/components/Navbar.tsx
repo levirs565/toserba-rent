@@ -7,6 +7,7 @@ const navItems: { href: string; label: string }[] = [
   { href: "/cart", label: "Keranjang" },
   { href: "/messages", label: "Pesan" },
   { href: "/provider", label: "Penyedia" },
+  { href: "/renter", label: "Penyewa"}
 ];
 
 function Icon({ children }: { children: ReactNode }) {
