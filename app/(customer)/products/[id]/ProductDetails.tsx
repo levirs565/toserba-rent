@@ -9,7 +9,7 @@ import { startTransition, useActionState, useState } from "react";
 const durations = [1, 3, 5, 7, 14];
 
 
-export function ProductDetails({ product, inCart }: { product: Product, inCart: boolean }) {
+export function ProductDetails({ product, inCart, userId }: { product: Product, inCart: boolean, userId: string }) {
   const [cartState, cartAction, _cartPending] = useActionState(addCart, null)
   const [days, setDays] = useState(3);
   const [delivery, setDelivery] = useState(false);
@@ -121,6 +121,8 @@ export function ProductDetails({ product, inCart }: { product: Product, inCart: 
               </div>
             )}
           </div>
+          <Link href={`/messages/${userId}`} className="btn btn-primary text-center space-y-3">Chat Pemilik</Link>
+
         </div>
       </div>
 

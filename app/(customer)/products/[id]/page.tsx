@@ -17,6 +17,6 @@ export default async function ProductDetail({
 
   const inCart = await isInCart(productId)
 
-  return <ProductDetails product={product as Product} inCart={inCart} />
+  return <ProductDetails product={product as Product} inCart={inCart} userId={product.userId} />
 }
 

@@ -34,6 +34,9 @@ model User {
   carts         Cart[]
   userAddresses UserAddress[]
 
+  outMessages ChatMessage[] @relation(name: "chat_message_from_user")
+  inMessages  ChatMessage[] @relation(name: "chat_message_to_user")
+
   @@map("users")
 }
 
@@ -112,7 +115,7 @@ model RentReturn {
 
   paymentId String? @db.Uuid
 
-  rent Rent @relation(fields: [rentId], references: [id])
+  rent    Rent     @relation(fields: [rentId], references: [id])
   payment Payment? @relation(fields: [paymentId], references: [id])
 
   @@map("rent_returns")
@@ -123,6 +126,19 @@ model Payment {
   amount Int
   isPaid Boolean @map("is_paid")
 
-  carts Cart[]
+  carts       Cart[]
   rentReturns RentReturn[]
+}
+
+model ChatMessage {
+  id      String   @id @default(uuid()) @db.Uuid
+  fromId String   @db.Uuid @map("from_id")
+  toId   String   @db.Uuid @map("to_id")
+  date    DateTime @default(now())
+  message String
+
+  fromUser User @relation(name: "chat_message_from_user", fields: [fromId], references: [id])
+  toUser   User @relation(name: "chat_message_to_user", fields: [toId], references: [id])
+
+  @@map("chat_messages")
 }

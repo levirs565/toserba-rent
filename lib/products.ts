@@ -101,6 +101,7 @@ export async function getProduct(id: string) {
     location: "",
     description: "",
     imageColor: "",
+    userId: product.userId
   };
 }
 
