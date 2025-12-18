@@ -9,8 +9,8 @@ export async function getUserRents() {
   const data = await prisma.rent.findMany({
     where: {
       cart: {
-        userId: id
-      }
+        userId: id,
+      },
     },
     select: {
       id: true,
@@ -20,17 +20,61 @@ export async function getUserRents() {
       requestState: true,
       rentReturn: {
         select: {
-          requestState: true
-        }
+          paymentId: true,
+          requestState: true,
+        },
       },
       product: {
         select: {
           id: true,
-          name: true
-        }
-      }
-    }
-  })
+          name: true,
+        },
+      },
+    },
+  });
 
   return data;
+}
+
+export async function getRentReturn(rentId: string) {
+  const id = (await getSession()).userId;
+
+  if (!id) return null;
+
+  const rentReturn = await prisma.rentReturn.findUnique({
+    where: {
+      rentId,
+    },
+    select: {
+      denda: true,
+      paymentId: true,
+      rent: {
+        select: {
+          durationDay: true,
+          rentPrice: true,
+          product: {
+            select: {
+              name: true,
+            },
+          },
+          cart: {
+            select: {
+              userId: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!rentReturn || rentReturn.paymentId) return null;
+  if (rentReturn.rent.cart.userId != id) return null;
+
+  return {
+    denda: rentReturn.denda,
+    rent: rentReturn.rent,
+    product: {
+      name: rentReturn.rent.product.name,
+    },
+  };
 }

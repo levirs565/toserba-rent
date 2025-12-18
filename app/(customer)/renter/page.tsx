@@ -34,20 +34,21 @@ export default async function ProviderPage() {
                 {((!rent.rentReturn?.requestState && rent.requestState == "ACCEPTED") || (rent.rentReturn?.requestState == "REJECTED")) && <button formAction={returnRent.bind(null, rent.id)} className="btn btn-primary text-center">
                   Kembalikan
                 </button>}
-                {rent.rentReturn?.requestState == "ACCEPTED" && <button className="btn btn-primary text-center">
+                {(rent.rentReturn?.requestState == "ACCEPTED" && !rent.rentReturn.paymentId) && <Link href={`/renter/${rent.id}/pay-return`} className="block btn btn-primary text-center">
                   Bayar Pengembalian
-                </button>}
+                </Link>}
               </form>
             </div>
             <span
               className={`pill bg-amber-100 text-amber-700`}
             >
-              {rent.rentReturn?.requestState == "ACCEPTED" ? "Pengembalian Diterima"
-                : rent.rentReturn?.requestState == "REJECTED" ? "Pengembalian Diotal"
-                  : rent.rentReturn?.requestState == "PENDING" ? "Menunggu Konfirmasi Pengembalian"
-                    : rent.requestState == "ACCEPTED" ? "Sewa Diterima"
-                      : rent.requestState == "PENDING" ? "Menunggu Konfirmas Sewa"
-                        : "Sewa Ditolak"}
+              {rent.rentReturn?.paymentId ? "Pengembalian Selesai" :
+                rent.rentReturn?.requestState == "ACCEPTED" ? "Pengembalian Diterima"
+                  : rent.rentReturn?.requestState == "REJECTED" ? "Pengembalian Diotal"
+                    : rent.rentReturn?.requestState == "PENDING" ? "Menunggu Konfirmasi Pengembalian"
+                      : rent.requestState == "ACCEPTED" ? "Sewa Diterima"
+                        : rent.requestState == "PENDING" ? "Menunggu Konfirmas Sewa"
+                          : "Sewa Ditolak"}
             </span>
           </div>
         ))}

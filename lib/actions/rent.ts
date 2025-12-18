@@ -5,6 +5,7 @@ import prisma from "../prisma";
 import { getSession } from "../session";
 import { revalidatePath } from "next/cache";
 import { addDays, differenceInDays } from "date-fns";
+import { redirect } from "next/navigation";
 
 export async function setRentRequestResult(rentId: string, accepted: boolean) {
   const userId = (await getSession()).userId;
@@ -138,4 +139,51 @@ export async function setRentReturnRequestResult(
   });
 
   revalidatePath(`/provider/${rentId}`);
+}
+
+export async function payReturn(rentId: string) {
+  const userId = (await getSession()).userId;
+  if (!userId) return;
+
+  const rent = await prisma.rent.findUnique({
+    where: {
+      id: rentId,
+    },
+    select: {
+      durationDay: true,
+      rentPrice: true,
+      rentReturn: {
+        select: {
+          denda: true,
+          requestState: true,
+        },
+      },
+      cart: {
+        select: {
+          userId: true,
+        },
+      },
+    },
+  });
+
+  if (!rent) return;
+  if (rent.cart.userId != userId) return;
+  if (!rent.rentReturn || rent.rentReturn.requestState != RequestState.ACCEPTED)
+    return;
+
+  await prisma.payment.create({
+    data: {
+      amount:
+        ((rent.rentPrice ?? 0) * rent.durationDay) / 2 +
+        (rent.rentReturn.denda ?? 0),
+      isPaid: true,
+      rentReturns: {
+        connect: {
+          rentId,
+        },
+      },
+    },
+  });
+
+  redirect(`/renter`);
 }

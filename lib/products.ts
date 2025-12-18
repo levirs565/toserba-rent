@@ -112,9 +112,6 @@ export async function getProductWithRent(id: string) {
     include: {
       rents: {
         where: {
-          requestState: {
-            not: RequestState.REJECTED,
-          },
           cart: {
             paymentId: {
               not: null,
@@ -140,7 +137,8 @@ export async function getProductWithRent(id: string) {
           rentReturn: {
             select: {
               date: true,
-              requestState: true
+              requestState: true,
+              paymentId: true
             }
           }
         },

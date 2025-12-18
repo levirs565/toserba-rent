@@ -99,19 +99,21 @@ model Rent {
   cart    Cart    @relation(fields: [cartId], references: [id])
 
   requestState RequestState @default(PENDING)
-  rentReturn  RentReturn?
+  rentReturn   RentReturn?
 
   @@map("rents")
 }
 
 model RentReturn {
-  rentId String   @id @map("rent_id") @db.Uuid
-  date   DateTime @db.Date
-  denda  Int?
-
+  rentId       String       @id @map("rent_id") @db.Uuid
+  date         DateTime     @db.Date
+  denda        Int?
   requestState RequestState @default(PENDING)
 
+  paymentId String? @db.Uuid
+
   rent Rent @relation(fields: [rentId], references: [id])
+  payment Payment? @relation(fields: [paymentId], references: [id])
 
   @@map("rent_returns")
 }
@@ -122,4 +124,5 @@ model Payment {
   isPaid Boolean @map("is_paid")
 
   carts Cart[]
+  rentReturns RentReturn[]
 }
