@@ -21,17 +21,8 @@ export function Checkout({ items, onSubmit }: {
   return <form action={onSubmit} className="space-y-6 text-white">
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-sm uppercase tracking-[0.18em] text-sky-100">
-          Pembayaran
-        </p>
-        <h1 className="text-3xl font-bold">Selesaikan pembayaran</h1>
-        <p className="text-slate-200">
-          Pilih metode pembayaran favorit, lihat total harga, dan konfirmasi.
-        </p>
+        <h1 className="text-3xl font-bold">Pembayaran</h1>
       </div>
-      <Link href="/cart" className="btn btn-ghost border border-white/20">
-        Kembali ke Keranjang
-      </Link>
     </div>
 
     <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">

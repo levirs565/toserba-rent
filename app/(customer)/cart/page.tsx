@@ -2,6 +2,7 @@ import Link from "next/link";
 import { formatIDR } from "../../lib/products";
 import { getCartProducts } from "@/lib/cart";
 import { calculatePrice } from "../../lib/utils";
+import { removeCart } from "@/lib/actions/cart";
 
 export default async function CartPage() {
   const cartItems = await getCartProducts();
@@ -26,19 +27,30 @@ export default async function CartPage() {
             className="card flex flex-col gap-3 border-white/10 bg-white/90 p-4 text-slate-900 md:flex-row md:items-center md:justify-between"
           >
             <div className="flex items-center gap-3">
-              <div
-                className="h-14 w-14 rounded-xl"
-              />
               <div>
-                <p className="text-lg font-semibold text-slate-900">
+                <p className="text-lg font-semibold text-slate-900 mb-2">
                   {item.product.name}
                 </p>
-                <p className="text-sm text-slate-600">{item.product.category}</p>
+                <p className="text-sm text-slate-600">
+                  <span
+                    className={`pill mr-2 ${item.product.status === "ready"
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-amber-100 text-amber-800"
+                      }`}
+                  >
+                    {item.product.status === "ready" ? "Tersedia" : "Disewakan"}
+                  </span>
+                  {item.product.category}
+
+                </p>
               </div>
             </div>
-            <div className="text-right text-sm text-slate-800">
-              <p className="font-semibold">{formatIDR(calculatePrice(item.product.pricePerDay, item.durationDay, item.needDeliver))}</p>
-            </div>
+            <form className="flex flex-row gap-3 items-center">
+              <div className="text-right text-sm text-slate-800">
+                <p className="font-semibold">{formatIDR(calculatePrice(item.product.pricePerDay, item.durationDay, item.needDeliver))}</p>
+              </div>
+              <button formAction={removeCart.bind(null, item.id)} className="btn btn-primary text-center">Hapus</button>
+            </form>
           </div>
         ))}
         {cartItems.length == 0 && <div

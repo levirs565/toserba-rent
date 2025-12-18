@@ -1,3 +1,4 @@
+import { RequestState } from "@/app/generated/prisma/enums";
 import prisma from "./prisma";
 import { getSession } from "./session";
 
@@ -27,15 +28,44 @@ export async function getCartProducts() {
     select: {
       rents: {
         select: {
+          id: true,
           needDeliver: true,
           durationDay: true,
-          product: true,
+          product: {
+            include: {
+              _count: {
+                select: {
+                  rents: {
+                    where: {
+                      requestState: {
+                        not: RequestState.REJECTED,
+                      },
+                      cart: {
+                        paymentId: {
+                          not: null,
+                        },
+                      },
+                      OR: [
+                        { rentReturn: null },
+                        {
+                          rentReturn: {
+                            paymentId: null,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
   });
   if (!cart) return [];
   return cart.rents.map((rent) => ({
+    id: rent.id,
     durationDay: rent.durationDay,
     needDeliver: rent.needDeliver,
     product: {
@@ -43,7 +73,7 @@ export async function getCartProducts() {
       name: rent.product.name,
       category: "Other",
       pricePerDay: rent.product.price,
-      status: "ready",
+      status: rent.product._count.rents > 0 ? "rented" : "ready",
       location: "",
       description: "",
       imageColor: "",

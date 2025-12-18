@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { AddCartData, AddCartSchema } from "../definitions";
 import prisma from "../prisma";
 import { getSession } from "../session";
+import { revalidatePath } from "next/cache";
 
 export async function addCart(state: any, rawData: AddCartData) {
   const validatedFields = AddCartSchema.safeParse(rawData);
@@ -58,6 +59,24 @@ export async function addCart(state: any, rawData: AddCartData) {
   return {
     success: true,
   };
+}
+
+export async function removeCart(rentId: string) {
+  const userId = (await getSession()).userId;
+
+  if (!userId) return;
+
+  await prisma.rent.delete({
+    where: {
+      id: rentId,
+      cart: {
+        paymentId: null,
+        userId
+      }
+    }
+  })
+
+  revalidatePath("/cart")
 }
 
 export async function payCart() {
