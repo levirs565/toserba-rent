@@ -30,7 +30,9 @@ export default async function ProviderPage() {
                 {rent.startDate?.toISOString().split('T')[0] ?? "."} - {rent.durationDay} hari
               </p>
 
-              <form className="mt-2">
+              <form className="mt-2 flex flex-row gap-3">
+                 <Link href={`/products/${rent.product.id}`} className="block btn flex-grow btn-primary text-center">Lihat Poduk</Link>
+                <Link href={`/messages/${rent.product.userId}`} className="block btn flex-grow btn-primary text-center">Chat Pemilik</Link>
                 {((!rent.rentReturn?.requestState && rent.requestState == "ACCEPTED") || (rent.rentReturn?.requestState == "REJECTED")) && <button formAction={returnRent.bind(null, rent.id)} className="btn btn-primary text-center">
                   Kembalikan
                 </button>}

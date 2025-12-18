@@ -28,6 +28,7 @@ export async function getUserRents() {
         select: {
           id: true,
           name: true,
+          userId: true
         },
       },
     },

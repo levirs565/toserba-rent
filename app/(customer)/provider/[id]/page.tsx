@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { formatIDR } from "@/app/lib/products";
 import { setRentRequestResult, setRentReturnRequestResult } from "@/lib/actions/rent";
 import { RequestState } from "@/app/generated/prisma/enums";
+import Link from "next/link";
 
 export default async function ProductDetail({
   params,
@@ -67,15 +68,18 @@ export default async function ProductDetail({
             <span
               className={`mt-2 pill bg-amber-100 text-amber-700`}
             >Menunggu Pembayaran</span>}
-          {rent.rentReturn?.requestState == "PENDING" &&
-            <form className="flex flex-row gap-3">
+
+          <form className="flex flex-row gap-3">
+            <Link href={`/messages/${rent.user.id}`} className="btn flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
+            {rent.rentReturn?.requestState == "PENDING" && <>
               <button formAction={setRentReturnRequestResult.bind(null, rent.id, false)} className="btn flex-grow btn-ghost text-center text-red-500!">
                 Tolak Pengembalian
               </button>
               <button formAction={setRentReturnRequestResult.bind(null, rent.id, true)} className="btn flex-grow btn-primary text-center">
                 Terima Pengembalian
-              </button>
-            </form>}
+              </button></>
+            }
+          </form>
         </div>)}
         {activeRents.length == 0 && <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
           <p className="text-sm font-semibold text-slate-900">
@@ -99,6 +103,7 @@ export default async function ProductDetail({
             {rent.needDeliver ? "Perlu Dikirim" : "Diambil Sendiri"}
           </p>
           <form className="flex flex-row gap-3">
+            <Link href={`/messages/${rent.user.id}`} className="btn flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
             <button formAction={setRentRequestResult.bind(null, rent.id, false)} className="btn flex-grow btn-ghost text-center text-red-500!">
               Tolak
             </button>
@@ -133,6 +138,9 @@ export default async function ProductDetail({
           <span
             className={`mt-2 pill bg-amber-100 text-amber-700`}
           >{rent.requestState == RequestState.REJECTED ? "Ditolak" : "Selesai"}</span>
+          <form className="flex flex-row gap-3 mt-2">
+            <Link href={`/messages/${rent.user.id}`} className="btn flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
+          </form>
         </div>)}
 
         {inactiveRents.length == 0 && <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
