@@ -31,5 +31,21 @@ export default async function ProductCheckoutPage({
 
   items.push({ name: `${product.name} (Asuransi)`, price: 5000 })
 
+  if (product.status == "rented") {
+    return <div className="space-y-6 text-white">
+      <div>
+        <h1 className="text-3xl font-bold">Ada Kesalahan</h1>
+      </div>
+
+      <div className="card flex flex-col gap-3 border-white/10 bg-white/90 p-4 text-slate-900">
+        <h2 className="text-lg font-semibold text-slate-700">
+          Terdapat Produk yang Masih Disewa
+        </h2>
+        <div className="rounded-xl bg-slate-50 p-3 border border-slate-200" key={product.id}>
+          <p className="text-sm font-semibold text-slate-900">{product.name}</p>
+        </div>
+      </div>
+    </div>
+  }
   return <Checkout items={items} onSubmit={payProduct.bind(null, { id, durationDay: durationDays, needDeliver })} />
 }
