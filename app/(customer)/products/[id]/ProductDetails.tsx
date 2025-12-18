@@ -181,15 +181,6 @@ export function ProductDetails({ product, inCart, userId }: { product: Product, 
               Sewa Sekarang
             </Link>}
         </div>
-
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
-          <p className="font-semibold text-slate-900">Catatan:</p>
-          <ul className="mt-2 list-disc space-y-1 pl-4">
-            <li>Ketersediaan real-time, status hijau siap disewa.</li>
-            <li>Durasi bisa diatur, harga otomatis terhitung.</li>
-            <li>Opsional alamat antar dengan peta untuk titik kirim.</li>
-          </ul>
-        </div>
       </div>
     </div>
   );
