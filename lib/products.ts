@@ -68,8 +68,15 @@ export async function getUserProducts() {
   }));
 }
 
-export async function getAllProducts() {
-  const products = await prisma.product.findMany();
+export async function getAllProducts(query: string | undefined) {
+  const products = await prisma.product.findMany(query ? {
+    where: {
+      name: {
+        contains: query,
+        mode: "insensitive"
+      }
+    }
+  } : undefined);
 
   return products.map((product) => ({
     id: product.id,

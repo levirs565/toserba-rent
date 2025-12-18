@@ -7,7 +7,7 @@ const navItems: { href: string; label: string }[] = [
   { href: "/cart", label: "Keranjang" },
   { href: "/messages", label: "Pesan" },
   { href: "/provider", label: "Penyedia" },
-  { href: "/renter", label: "Penyewa"}
+  { href: "/renter", label: "Penyewa" }
 ];
 
 function Icon({ children }: { children: ReactNode }) {
@@ -36,8 +36,9 @@ export default async function Navbar() {
           </div>
         </Link>
 
-        <form className="relative ml-auto hidden flex-1 items-center md:flex">
+        <form className="relative ml-auto hidden flex-1 items-center md:flex" action="/" method="GET">
           <input
+            name="q"
             type="search"
             placeholder="Cari kamera, alat musik, perabot..."
             className="input bg-white/10 pr-12 text-sm"
