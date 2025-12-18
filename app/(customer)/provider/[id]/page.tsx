@@ -62,15 +62,19 @@ export default async function ProductDetail({
           <p className="text-sm text-slate-500">
             {rent.needDeliver ? "Perlu Dikirim" : "Diambil Sendiri"}
           </p>
-          { rent.rentReturn?.requestState == "PENDING" &&
-          <form className="flex flex-row gap-3">
-            <button formAction={setRentReturnRequestResult.bind(null, rent.id, false)} className="btn flex-grow btn-ghost text-center text-red-500!">
-              Tolak Pengembalian
-            </button>
-            <button formAction={setRentReturnRequestResult.bind(null, rent.id, true)} className="btn flex-grow btn-primary text-center">
-              Terima Pengembalian
-            </button>
-          </form> }
+          {rent.rentReturn?.requestState == "ACCEPTED" &&
+            <span
+              className={`mt-2 pill bg-amber-100 text-amber-700`}
+            >Menunggu Pembayaran</span>}
+          {rent.rentReturn?.requestState == "PENDING" &&
+            <form className="flex flex-row gap-3">
+              <button formAction={setRentReturnRequestResult.bind(null, rent.id, false)} className="btn flex-grow btn-ghost text-center text-red-500!">
+                Tolak Pengembalian
+              </button>
+              <button formAction={setRentReturnRequestResult.bind(null, rent.id, true)} className="btn flex-grow btn-primary text-center">
+                Terima Pengembalian
+              </button>
+            </form>}
         </div>)}
         {activeRents.length == 0 && <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
           <p className="text-sm font-semibold text-slate-900">

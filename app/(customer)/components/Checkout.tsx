@@ -14,16 +14,11 @@ const paymentOptions = [
   "QRIS",
 ];
 
-export function Checkout({ subtotal, delivery, productId, durationDay, needDeliver }: {
-  productId?: string,
-  durationDay?: number,
-  needDeliver?: boolean,
-  subtotal: number,
-  delivery: number
+export function Checkout({ items, onSubmit }: {
+  onSubmit: () => void,
+  items: { name: string, price: number }[]
 }) {
-  const [state, action, pending] = useActionState(payCart, null);
-  const [productState, productAction, productPending] = useActionState(payProduct, null);
-  return <div className="space-y-6 text-white">
+  return <form action={onSubmit} className="space-y-6 text-white">
     <div className="flex items-center justify-between">
       <div>
         <p className="text-sm uppercase tracking-[0.18em] text-sky-100">
@@ -62,34 +57,18 @@ export function Checkout({ subtotal, delivery, productId, durationDay, needDeliv
           Ringkasan Harga
         </h2>
         <div className="space-y-2 text-sm text-slate-700">
-          <div className="flex items-center justify-between">
-            <span>Subtotal</span>
-            <span>{formatIDR(subtotal)}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>Biaya antar</span>
-            <span>{formatIDR(delivery)}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>Asuransi</span>
-            <span>{formatIDR(15000)}</span>
-          </div>
+          {items.map(item =>
+            <div className="flex items-center justify-between" key={item.name}>
+              <span>{item.name}</span>
+              <span>{formatIDR(item.price)}</span>
+            </div>
+          )}
           <div className="flex items-center justify-between border-t border-slate-200 pt-3 text-base font-bold text-slate-900">
             <span>Total</span>
-            <span>{formatIDR(subtotal + delivery + 15000)}</span>
+            <span>{formatIDR(items.reduce((prev, item) => prev + item.price, 0))}</span>
           </div>
         </div>
-        <button className="btn btn-primary w-full text-center" onClick={() => {
-          startTransition(() => {
-            if (!productId) { action() } else {
-              productAction({
-                durationDay: durationDay!,
-                needDeliver: needDeliver!,
-                id: productId
-              })
-            }
-          })
-        }}>
+        <button className="btn btn-primary w-full text-center">
           Bayar Sekarang
         </button>
         <p className="text-sm text-slate-600">
@@ -98,5 +77,5 @@ export function Checkout({ subtotal, delivery, productId, durationDay, needDeliv
         </p>
       </div>
     </div>
-  </div >
+  </form >
 }

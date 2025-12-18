@@ -93,12 +93,14 @@ export async function payCart() {
   if (!cart) return;
 
   const now = new Date();
-  let totalPrice = 15000;
+  let totalPrice = 0;
 
   await Promise.all(
     cart.rents.map((item) => {
       totalPrice +=
-        item.durationDay * item.product.price + (item.needDeliver ? 25000 : 0);
+        (item.durationDay * item.product.price) / 2 +
+        (item.needDeliver ? 25000 : 0) +
+        15000;
       return prisma.rent.update({
         where: {
           id: item.id,
@@ -125,10 +127,10 @@ export async function payCart() {
     },
   });
 
-  redirect("/cart");
+  redirect("/renter");
 }
 
-export async function payProduct(state: any, rawData: AddCartData) {
+export async function payProduct(rawData: AddCartData) {
   const validatedFields = AddCartSchema.safeParse(rawData);
 
   if (!validatedFields.success) {
@@ -157,10 +159,11 @@ export async function payProduct(state: any, rawData: AddCartData) {
       success: false,
     };
 
+  // TODO: Cek lagi
   await prisma.payment.create({
     data: {
       amount:
-        product.price * data.durationDay +
+        (product.price * data.durationDay) / 2 +
         (data.needDeliver ? 25000 : 0) +
         15000,
       isPaid: true,
@@ -182,5 +185,5 @@ export async function payProduct(state: any, rawData: AddCartData) {
     },
   });
 
-    redirect("/cart");
+  redirect("/renter");
 }

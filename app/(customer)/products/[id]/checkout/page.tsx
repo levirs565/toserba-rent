@@ -1,4 +1,5 @@
-import { Checkout } from "@/app/(customer)/checkout/Checkout";
+import { Checkout } from "@/app/(customer)/components/Checkout";
+import { payProduct } from "@/lib/actions/cart";
 import { getProduct } from "@/lib/products";
 import { SearchParams } from "next/dist/server/request/search-params";
 import { notFound } from "next/navigation";
@@ -19,10 +20,16 @@ export default async function ProductCheckoutPage({
   if (isNaN(durationDays)) return notFound()
   const needDeliver = String(urlParams["needDeliver"]) == String(true);
 
+  const items = [{
+    name: `${product.name} (50%)`,
+    price: (durationDays * product.pricePerDay) / 2
+  }]
 
-  return <Checkout delivery={needDeliver ? 25000 : 0}
-    subtotal={product.pricePerDay * durationDays}
-    durationDay={durationDays}
-    productId={id}
-    needDeliver={needDeliver} />
+  if (needDeliver) {
+    items.push({ name: `${product.name} (Pengiriman)`, price: 25000 })
+  }
+
+  items.push({ name: `${product.name} (Asuransi)`, price: 5000 })
+
+  return <Checkout items={items} onSubmit={payProduct.bind(null, { id, durationDay: durationDays, needDeliver })} />
 }
