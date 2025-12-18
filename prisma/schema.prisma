@@ -24,6 +24,9 @@ model User {
   birthPlace String?   @map("birth_place")
   nik        String?
 
+  hasKtp     Boolean @default(false) @map("has_ktp")
+  hasProfile Boolean @default(false) @map("has_profile")
+
   verificationState            VerificationState @default(PENDING) @map("verification_state")
   verificationStateChangedTime DateTime?         @map("verification_state_changed_time")
 
@@ -64,11 +67,11 @@ model Cart {
 
 // RELASI SALAH
 model Rent {
-  id          String   @id @default(uuid()) @db.Uuid
+  id          String    @id @default(uuid()) @db.Uuid
   startDate   DateTime? @map("start_date") @db.Date
-  durationDay Int      @map("duration_day")
-  rentPrice   Int?     @map("rent_price")
-  needDeliver Boolean  @map("need_deliver")
+  durationDay Int       @map("duration_day")
+  rentPrice   Int?      @map("rent_price")
+  needDeliver Boolean   @map("need_deliver")
 
   productId String @map("product_id") @db.Uuid
   cartId    String @map("cart_id") @db.Uuid
