@@ -1,7 +1,6 @@
-import { getUserProducts } from "@/lib/products";
-import { formatIDR } from "@/app/lib/products";
 import Link from "next/link";
 import { getUserRents } from "@/lib/rent";
+import { returnRent } from "@/lib/actions/rent";
 
 export default async function ProviderPage() {
   const rents = await getUserRents();
@@ -21,8 +20,7 @@ export default async function ProviderPage() {
       </h2>
       <div className="grid gap-3">
         {rents.map((rent) => (
-          <Link
-            href={`/renter/${rent.id}`}
+          <div
             key={rent.id}
             className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"
           >
@@ -31,13 +29,27 @@ export default async function ProviderPage() {
               <p className="text-slate-600">
                 {rent.startDate?.toISOString().split('T')[0] ?? "."} - {rent.durationDay} hari
               </p>
+
+              <form className="mt-2">
+                {((!rent.rentReturn?.requestState && rent.requestState == "ACCEPTED") || (rent.rentReturn?.requestState == "REJECTED")) && <button formAction={returnRent.bind(null, rent.id)} className="btn btn-primary text-center">
+                  Kembalikan
+                </button>}
+                {rent.rentReturn?.requestState == "ACCEPTED" && <button className="btn btn-primary text-center">
+                  Bayar Pengembalian
+                </button>}
+              </form>
             </div>
             <span
               className={`pill bg-amber-100 text-amber-700`}
             >
-              {rent.requestState == "ACCEPTED" ? "Diterima" : rent.requestState == "PENDING" ? "Menunggu Konfirmasi" : "Ditolak"}
+              {rent.rentReturn?.requestState == "ACCEPTED" ? "Pengembalian Diterima"
+                : rent.rentReturn?.requestState == "REJECTED" ? "Pengembalian Diotal"
+                  : rent.rentReturn?.requestState == "PENDING" ? "Menunggu Konfirmasi Pengembalian"
+                    : rent.requestState == "ACCEPTED" ? "Sewa Diterima"
+                      : rent.requestState == "PENDING" ? "Menunggu Konfirmas Sewa"
+                        : "Sewa Ditolak"}
             </span>
-          </Link>
+          </div>
         ))}
       </div>
     </div>

@@ -18,6 +18,11 @@ export async function getUserRents() {
       durationDay: true,
       needDeliver: true,
       requestState: true,
+      rentReturn: {
+        select: {
+          requestState: true
+        }
+      },
       product: {
         select: {
           id: true,

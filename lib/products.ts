@@ -31,6 +31,29 @@ export async function getUserProducts() {
     },
   });
 
+  const returnRequestCount = (await prisma.product.findMany({
+    where: {
+      userId,
+    },
+    select: {
+      id: true,
+      _count: {
+        select: {
+          rents: {
+            where: {
+              rentReturn: {
+                requestState: "PENDING",
+              },
+            },
+          },
+        },
+      },
+    },
+  })).reduce((prev, current) => {
+    prev.set(current.id, current._count.rents)
+    return prev
+  }, new Map<string, number>());
+
   return products.map((product) => ({
     id: product.id,
     name: product.name,
@@ -41,6 +64,7 @@ export async function getUserProducts() {
     description: "",
     imageColor: "",
     requestCount: product._count.rents,
+    returnRequestCount: returnRequestCount.get(product.id) ?? 0
   }));
 }
 
@@ -113,6 +137,12 @@ export async function getProductWithRent(id: string) {
               },
             },
           },
+          rentReturn: {
+            select: {
+              date: true,
+              requestState: true
+            }
+          }
         },
       },
     },
@@ -137,8 +167,9 @@ export async function getProductWithRent(id: string) {
       requestState: rent.requestState,
       user: {
         id: rent.cart.user.id,
-        name: rent.cart.user.name
-      }
-    }))
+        name: rent.cart.user.name,
+      },
+      rentReturn: rent.rentReturn
+    })),
   };
 }

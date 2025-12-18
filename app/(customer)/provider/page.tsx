@@ -32,11 +32,12 @@ export default async function ProviderPage() {
               </p>
             </div>
             {
-              item.requestCount > 0 &&
+              (item.requestCount > 0 || item.returnRequestCount > 0) &&
               <span
                 className={`pill bg-amber-100 text-amber-700`}
               >
-                Ada Permintaan Penyewaan
+                {[item.requestCount > 0 && "Ada Permintaan Penyewaan", 
+                  item.returnRequestCount && "Ada Permintaan Pengembalian"].filter(it => it).join(" dan ")}
               </span>
             }
           </Link>

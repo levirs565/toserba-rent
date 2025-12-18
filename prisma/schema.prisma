@@ -99,8 +99,21 @@ model Rent {
   cart    Cart    @relation(fields: [cartId], references: [id])
 
   requestState RequestState @default(PENDING)
+  rentReturn  RentReturn?
 
   @@map("rents")
+}
+
+model RentReturn {
+  rentId String   @id @map("rent_id") @db.Uuid
+  date   DateTime @db.Date
+  denda  Int?
+
+  requestState RequestState @default(PENDING)
+
+  rent Rent @relation(fields: [rentId], references: [id])
+
+  @@map("rent_returns")
 }
 
 model Payment {
