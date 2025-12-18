@@ -7,7 +7,7 @@ export function AddProduct() {
 
   return <div className="card space-y-4 border-white/10 bg-white/10 p-6">
     <h2 className="text-lg font-semibold text-slate-700">
-      Tambah produk baru
+      Barang Baru
     </h2>
     <form
       className="space-y-3"
@@ -51,9 +51,5 @@ export function AddProduct() {
         Simpan produk
       </button>
     </form>
-    <p className="text-sm text-slate-500">
-      Form ini untuk penyedia menambahkan atau mengatur barang sewaan,
-      termasuk harga harian.
-    </p>
   </div>
 }

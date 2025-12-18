@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { AddProductFormSchema } from "../definitions";
 import prisma from "../prisma";
 import { getSession } from "../session";
+import { redirect } from "next/navigation";
 
 export async function addProduct(state: any, formData: FormData) {
   const fields = {
@@ -36,5 +37,5 @@ export async function addProduct(state: any, formData: FormData) {
     },
   });
 
-  revalidatePath("/provider ")
+  redirect("/provider")
 }
