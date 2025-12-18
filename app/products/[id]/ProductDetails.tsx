@@ -8,12 +8,20 @@ import { startTransition, useActionState, useState } from "react";
 
 const durations = [1, 3, 5, 7, 14];
 
+
 export function ProductDetails({ product, inCart }: { product: Product, inCart: boolean }) {
   const [cartState, cartAction, _cartPending] = useActionState(addCart, null)
   const [days, setDays] = useState(3);
   const [delivery, setDelivery] = useState(false);
 
   const total = calculatePrice(product.pricePerDay, days, delivery);
+
+  function createCheckoutParams() {
+    const params = new URLSearchParams()
+    params.set("durationDays", String(days))
+    params.set("needDeliver", String(delivery))
+    return params.toString()
+  }
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
@@ -154,21 +162,22 @@ export function ProductDetails({ product, inCart }: { product: Product, inCart: 
               >
                 Add to Cart
               </button>
-              <Link
-                href="/checkout"
-                className="btn w-full bg-slate-900 text-center text-white hover:bg-slate-800"
-              >
-                Sewa Sekarang
-              </Link>
             </>
           }
-        </div>
 
-        {(cartState?.success || inCart) && (
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-            Telah ditambahkan ke Keranjang
-          </div>
-        )}
+          {(cartState?.success || inCart) && (
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              Telah ditambahkan ke Keranjang
+            </div>
+          )}
+
+          <Link
+            href={`/products/${product.id}/checkout?` + createCheckoutParams()}
+            className="btn w-full bg-slate-900 text-center text-white hover:bg-slate-800"
+          >
+            Sewa Sekarang
+          </Link>
+        </div>
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
           <p className="font-semibold text-slate-900">Catatan:</p>

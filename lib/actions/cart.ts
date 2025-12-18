@@ -95,32 +95,92 @@ export async function payCart() {
   const now = new Date();
   let totalPrice = 15000;
 
-  await Promise.all(cart.rents.map((item) => {
-    totalPrice += item.durationDay * item.product.price + (item.needDeliver ? 25000 : 0)
-    return prisma.rent.update({
-      where: {
-        id: item.id,
-      },
-      data: {
-        startDate: now,
-        rentPrice: item.product.price,
-      }
+  await Promise.all(
+    cart.rents.map((item) => {
+      totalPrice +=
+        item.durationDay * item.product.price + (item.needDeliver ? 25000 : 0);
+      return prisma.rent.update({
+        where: {
+          id: item.id,
+        },
+        data: {
+          startDate: now,
+          rentPrice: item.product.price,
+        },
+      });
     })
-  }))
+  );
 
   await prisma.cart.update({
     where: {
-      id: cart.id
+      id: cart.id,
     },
     data: {
       payment: {
         create: {
           amount: totalPrice,
-          isPaid: true
-        }
-      }
-    }
-  })
+          isPaid: true,
+        },
+      },
+    },
+  });
 
-  redirect("/cart")
+  redirect("/cart");
+}
+
+export async function payProduct(state: any, rawData: AddCartData) {
+  const validatedFields = AddCartSchema.safeParse(rawData);
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const data = validatedFields.data;
+
+  const userId = (await getSession()).userId;
+
+  if (!userId)
+    return {
+      success: false,
+    };
+
+  const product = await prisma.product.findUnique({
+    where: {
+      id: data.id,
+    },
+  });
+  if (!product)
+    return {
+      success: false,
+    };
+
+  await prisma.payment.create({
+    data: {
+      amount:
+        product.price * data.durationDay +
+        (data.needDeliver ? 25000 : 0) +
+        15000,
+      isPaid: true,
+
+      carts: {
+        create: {
+          userId: userId,
+          rents: {
+            create: {
+              durationDay: data.durationDay,
+              needDeliver: data.needDeliver,
+              startDate: new Date(),
+              productId: data.id,
+              rentPrice: product.price,
+            },
+          },
+        },
+      },
+    },
+  });
+
+    redirect("/cart");
 }

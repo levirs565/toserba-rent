@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { formatIDR } from "../lib/products";
 import { startTransition, useActionState } from "react";
-import { payCart } from "@/lib/actions/cart";
+import { payCart, payProduct } from "@/lib/actions/cart";
 
 
 const paymentOptions = [
@@ -14,8 +14,15 @@ const paymentOptions = [
   "QRIS",
 ];
 
-export function Checkout({ subtotal, delivery }: { subtotal: number, delivery: number }) {
+export function Checkout({ subtotal, delivery, productId, durationDay, needDeliver }: {
+  productId?: string,
+  durationDay?: number,
+  needDeliver?: boolean,
+  subtotal: number,
+  delivery: number
+}) {
   const [state, action, pending] = useActionState(payCart, null);
+  const [productState, productAction, productPending] = useActionState(payProduct, null);
   return <div className="space-y-6 text-white">
     <div className="flex items-center justify-between">
       <div>
@@ -72,7 +79,17 @@ export function Checkout({ subtotal, delivery }: { subtotal: number, delivery: n
             <span>{formatIDR(subtotal + delivery + 15000)}</span>
           </div>
         </div>
-        <button className="btn btn-primary w-full text-center" onClick={() => startTransition(() => action())}>
+        <button className="btn btn-primary w-full text-center" onClick={() => {
+          startTransition(() => {
+            if (!productId) { action() } else {
+              productAction({
+                durationDay: durationDay!,
+                needDeliver: needDeliver!,
+                id: productId
+              })
+            }
+          })
+        }}>
           Bayar Sekarang
         </button>
         <p className="text-sm text-slate-600">
@@ -81,5 +98,5 @@ export function Checkout({ subtotal, delivery }: { subtotal: number, delivery: n
         </p>
       </div>
     </div>
-  </div>
+  </div >
 }
