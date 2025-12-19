@@ -2,13 +2,6 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import { getCurrentUser } from "@/lib/auth"
 
-const navItems: { href: string; label: string }[] = [
-  { href: "/", label: "Beranda" },
-  { href: "/cart", label: "Keranjang" },
-  { href: "/messages", label: "Pesan" },
-  { href: "/provider", label: "Penyedia" },
-];
-
 function Icon({ children }: { children: ReactNode }) {
   return (
     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-lg text-white">
@@ -43,18 +36,6 @@ export default async function Navbar() {
             <span className="hidden text-sm font-semibold md:block">{user.name}</span>
           </div>}
         </div>
-      </div>
-
-      <div className="mx-auto hidden max-w-6xl items-center gap-4 px-4 pb-3 text-sm font-medium text-slate-200 md:flex">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 hover:bg-white/10"
-          >
-            {item.label}
-          </Link>
-        ))}
       </div>
     </header>
   );

@@ -13,7 +13,8 @@ export async function getCurrentUser() {
     select: {
       name: true,
       verificationState: true,
-      verificationStateChangedTime: true
+      verificationStateChangedTime: true,
+      isAdmin: true
     },
   });
 
@@ -21,7 +22,8 @@ export async function getCurrentUser() {
 
   return {
     name: data.name,
-    verification: data.verificationStateChangedTime ? data.verificationState : null
+    verification: data.verificationStateChangedTime ? data.verificationState : null,
+    isAdmin: data.isAdmin
   };
 }
 

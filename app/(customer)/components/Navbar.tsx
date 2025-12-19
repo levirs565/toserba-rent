@@ -25,7 +25,12 @@ export default async function Navbar() {
       { href: "/provider", label: "Penyedia" },
       { href: "/renter", label: "Penyewa" }
     )
+
+    if (user.isAdmin) {
+      navItems.push({ href: "/admin", label: "Admin" })
+    }
   }
+
 
   return (
     <header className="sticky top-0 z-30 border-b border-white/5 bg-[#0f1f38]/85 backdrop-blur-md">
