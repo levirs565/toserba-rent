@@ -58,6 +58,7 @@ export async function getRentReturn(rentId: string) {
           rentPrice: true,
           product: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -71,13 +72,15 @@ export async function getRentReturn(rentId: string) {
     },
   });
 
-  if (!rentReturn || rentReturn.paymentId) return null;
+  if (!rentReturn) return null;
   if (rentReturn.rent.cart.userId != id) return null;
 
   return {
     denda: rentReturn.denda,
     rent: rentReturn.rent,
+    paymentId: rentReturn.paymentId,
     product: {
+      id: rentReturn.rent.product.id,
       name: rentReturn.rent.product.name,
     },
   };

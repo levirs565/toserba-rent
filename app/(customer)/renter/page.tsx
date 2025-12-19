@@ -42,6 +42,9 @@ export default async function ProviderPage() {
                 {(rent.rentReturn?.requestState == "ACCEPTED" && !rent.rentReturn.paymentId) && <Link href={`/renter/${rent.id}/pay-return`} className="block btn btn-primary text-center">
                   Bayar Pengembalian
                 </Link>}
+                {(rent.rentReturn?.paymentId) && <Link href={`/renter/${rent.id}/review`} className="block btn btn-primary text-center">
+                  Review
+                </Link>}
               </form>
             </div>
             <span

@@ -72,3 +72,20 @@ export async function addProduct(state: any, formData: FormData) {
 
   redirect("/provider");
 }
+
+export async function addReview(id: string, formData: FormData) {
+  const review = String(formData.get("review"));
+  const userId = (await getSession()).userId;
+
+  if (!review || !userId) return;
+
+  await prisma.review.create({
+    data: {
+      userId: userId,
+      content: review,
+      productId: id,
+    },
+  });
+
+  redirect("/renter")
+}

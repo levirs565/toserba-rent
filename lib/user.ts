@@ -113,3 +113,8 @@ export async function getUserAddress() {
 
   return data;
 }
+
+export async function canTransaction() {
+  const user = await getCurrentUser()
+  return user?.verificationState == "ACCEPTED";
+}

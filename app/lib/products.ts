@@ -8,9 +8,16 @@ export type Product = {
   description: string;
   status: ProductStatus;
   address?: {
-    name: string
-    address: string
-  }
+    name: string;
+    address: string;
+  };
+  reviews: {
+    id: string;
+    user: {
+      name: string;
+    };
+    content: string;
+  }[];
 };
 
 export function formatIDR(value: number) {

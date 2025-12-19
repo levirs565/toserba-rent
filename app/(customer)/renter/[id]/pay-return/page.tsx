@@ -14,7 +14,7 @@ export default async function PayReturnPage(
 
   const rentReturn = await getRentReturn(id);
 
-  if (!rentReturn) return notFound();
+  if (!rentReturn || rentReturn.paymentId) return notFound();
 
   const items = [
     {

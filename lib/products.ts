@@ -105,7 +105,8 @@ export async function getUserProducts() {
     category: product.category?.name ?? "Other",
     // TODO: Sratus
     pricePerDay: product.price,
-    status: (rentProductActiveCount.get(product.id) ?? 0) > 0 ? "rented" : "ready",
+    status:
+      (rentProductActiveCount.get(product.id) ?? 0) > 0 ? "rented" : "ready",
     location: "",
     description: "",
     imageColor: "",
@@ -195,6 +196,17 @@ export async function getProduct(id: string) {
       id,
     },
     include: {
+      reviews: {
+        select: {
+          id: true,
+          content: true,
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
       address: {
         select: {
           name: true,
@@ -244,6 +256,7 @@ export async function getProduct(id: string) {
     pricePerDay: product.price,
     status: product._count.rents > 0 ? "rented" : "ready",
     userId: product.userId,
+    reviews: product.reviews
   };
 }
 
@@ -257,6 +270,17 @@ export async function getProductWithRent(id: string) {
       id,
     },
     include: {
+      reviews: {
+        select: {
+          content: true,
+          id: true,
+          user: {
+            select: {
+              name: true
+            }
+          },
+        }
+      },
       _count: {
         select: {
           rents: {
@@ -344,6 +368,7 @@ export async function getProductWithRent(id: string) {
     pricePerDay: product.price,
     status: product._count.rents > 0 ? "rented" : "ready",
     description: product.descripton,
+    reviews: product.reviews,
     rents: product.rents.map((rent) => ({
       id: rent.id,
       startDate: rent.startDate,

@@ -37,7 +37,8 @@ model User {
   outMessages ChatMessage[] @relation(name: "chat_message_from_user")
   inMessages  ChatMessage[] @relation(name: "chat_message_to_user")
 
-  isAdmin Boolean @default(false) @map("is_admin")
+  isAdmin Boolean  @default(false) @map("is_admin")
+  reviews Review[]
 
   @@map("users")
 }
@@ -72,8 +73,21 @@ model Product {
   category ProductCategory? @relation(fields: [categoryId], references: [id])
   rents    Rent[]
   address  UserAddress?     @relation(fields: [addressId], references: [id])
+  reviews  Review[]
 
   @@map("products")
+}
+
+model Review {
+  id        String @id @default(uuid()) @db.Uuid
+  userId    String @db.Uuid
+  productId String @map("product_id") @db.Uuid
+  content   String
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("reviews")
 }
 
 model ProductCategory {

@@ -22,6 +22,7 @@ export default async function ProductDetail({
   const inactiveRents = product.rents.filter(rent => rent.rentReturn?.paymentId || rent.requestState == RequestState.REJECTED)
 
   return <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+    
     <div className="card overflow-hidden border-white/10 bg-white/90">
       <div className="relative h-72">
         <img src={`/api/get-product-image/${product.id}`} className="w-full h-full object-cover" />
@@ -150,6 +151,28 @@ export default async function ProductDetail({
           </p>
         </div>}
       </div>
+    </div>
+
+    <div className="card h-fit space-y-4 border-white/10 bg-white/90 p-5 text-slate-900">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-slate-900">
+          Review
+        </h2>
+      </div>
+
+      {product.reviews.map((review) => <div className="rounded-xl bg-slate-50 p-3 border border-slate-200" key={review.id}>
+        <p className="text-sm font-semibold text-slate-900">{review.user.name}</p>
+        <p className="text-sm text-slate-500">
+          {review.content}
+        </p>
+      </div>)}
+      {product.reviews.length == 0 &&
+        <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
+          <p className="text-sm font-semibold text-slate-900">
+            Belum Ada Review
+          </p>
+        </div>}
+
     </div>
   </div>
 }
