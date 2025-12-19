@@ -55,15 +55,17 @@ export default async function Navbar() {
               <Icon>👤</Icon>
               <span className="hidden text-sm font-semibold md:block">Login</span>
             </Link>}
-          <Link href="/cart" className="btn btn-ghost flex items-center gap-2">
-            <Icon>🛒</Icon>
-            <span className="hidden text-sm font-semibold md:block">
-              Keranjang
-            </span>
-          </Link>
-          <Link href="/messages" className="btn btn-primary text-sm">
-            Obrolan
-          </Link>
+          {user && <>
+            <Link href="/cart" className="btn btn-ghost flex items-center gap-2">
+              <Icon>🛒</Icon>
+              <span className="hidden text-sm font-semibold md:block">
+                Keranjang
+              </span>
+            </Link>
+            <Link href="/messages" className="btn btn-primary text-sm">
+              Obrolan
+            </Link>
+          </>}
           {user && <Link href="/user" className="flex items-center gap-2">
             <Icon>👤</Icon>
             <div className="flex flex-col">

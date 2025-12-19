@@ -51,7 +51,7 @@ export default function LoginPage() {
             Masuk
           </button>
         </form>
-        <p className="mt-4 text-center text-sm text-slate-200">
+        <p className="mt-4 text-center text-sm text-slate-500">
           Belum punya akun?{" "}
           <Link href="/register" className="font-semibold text-sky-100">
             Daftar di sini
