@@ -9,7 +9,7 @@ import { startTransition, useActionState, useState } from "react";
 const durations = [1, 3, 5, 7, 14];
 
 
-export function ProductDetails({ product, inCart, userId, isLogged, addresses }: { product: Product, inCart: boolean, userId: string, isLogged: boolean, addresses: { id: string, name: string, address: string }[] | null }) {
+export function ProductDetails({ product, inCart, userId, isLogged, addresses, can, isCurrentUser }: { product: Product, inCart: boolean, userId: string, isLogged: boolean, addresses: { id: string, name: string, address: string }[] | null, can: boolean, isCurrentUser: boolean }) {
   const [cartState, cartAction, _cartPending] = useActionState(addCart, null)
   const [days, setDays] = useState(3);
   const [selectedAdress, setSelectedAddress] = useState(addresses?.at(0)?.id);
@@ -151,7 +151,7 @@ export function ProductDetails({ product, inCart, userId, isLogged, addresses }:
           </div>
         </div>
 
-        {isLogged &&
+        {isLogged && can && !isCurrentUser &&
           <div className="flex flex-col gap-3">
             {!(cartState?.success || inCart) &&
               <>
@@ -181,6 +181,18 @@ export function ProductDetails({ product, inCart, userId, isLogged, addresses }:
         {!isLogged && <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           Login untuk Menyewa
         </div>}
+        {!can &&
+          <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
+            <p className="text-sm font-semibold text-slate-900">
+              Anda Belum Terverifikasi
+            </p>
+          </div>}
+        {isCurrentUser &&
+          <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
+            <p className="text-sm font-semibold text-slate-900">
+              Barang ini milik anda
+            </p>
+          </div>}
       </div>
 
       <div className="card h-fit space-y-4 border-white/10 bg-white/90 p-5 text-slate-900">

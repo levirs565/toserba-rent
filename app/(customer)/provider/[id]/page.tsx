@@ -22,7 +22,6 @@ export default async function ProductDetail({
   const inactiveRents = product.rents.filter(rent => rent.rentReturn?.paymentId || rent.requestState == RequestState.REJECTED)
 
   return <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-    
     <div className="card overflow-hidden border-white/10 bg-white/90">
       <div className="relative h-72">
         <img src={`/api/get-product-image/${product.id}`} className="w-full h-full object-cover" />

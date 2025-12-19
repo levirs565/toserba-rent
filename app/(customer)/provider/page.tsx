@@ -2,11 +2,14 @@ import { getUserProducts } from "@/lib/products";
 import { formatIDR } from "@/app/lib/products";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { canTransaction } from "@/lib/user";
 
 export default async function ProviderPage() {
   const products = await getUserProducts();
 
   if (products == null) return notFound();
+
+  const can = await canTransaction();
 
   return <div className="space-y-6 text-white">
     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -24,7 +27,7 @@ export default async function ProviderPage() {
       <div className="grid gap-3">
         {products.map((item) => (
           <Link
-          href={`/provider/${item.id}`}
+            href={`/provider/${item.id}`}
             key={item.id}
             className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"
           >
@@ -39,16 +42,23 @@ export default async function ProviderPage() {
               <span
                 className={`pill bg-amber-100 text-amber-700`}
               >
-                {[item.requestCount > 0 && "Ada Permintaan Penyewaan", 
-                  item.returnRequestCount && "Ada Permintaan Pengembalian"].filter(it => it).join(" dan ")}
+                {[item.requestCount > 0 && "Ada Permintaan Penyewaan",
+                item.returnRequestCount && "Ada Permintaan Pengembalian"].filter(it => it).join(" dan ")}
               </span>
             }
           </Link>
         ))}
       </div>
-      <Link href="/provider/add" className="block btn flex-grow btn-primary text-center">
-        Tambah Barang
-      </Link>
+      {can &&
+        <Link href="/provider/add" className="block btn flex-grow btn-primary text-center">
+          Tambah Barang
+        </Link>}
+      {!can &&
+        <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
+          <p className="text-sm font-semibold text-slate-900">
+            Anda Belum Terverifikasi
+          </p>
+        </div>}
     </div>
   </div>
 }
