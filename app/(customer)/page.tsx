@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { formatIDR } from "../lib/products";
-import { getAllProducts } from "@/lib/products";
+import { getAllCategories, getAllProducts } from "@/lib/products";
 
+function createCategoryUrl(q: string | undefined, category: string | undefined) {
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  if (category) params.set("category", category);
+  return params.toString();
+}
 
 export default async function Home({
   searchParams,
@@ -9,7 +15,11 @@ export default async function Home({
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const query = (await searchParams)?.q;
-  const products = await getAllProducts(typeof query == "string" ? query : undefined);
+  const category = (await searchParams)?.category;
+  const categories = await getAllCategories();
+  const queryStr = typeof query == "string" ? query : undefined;
+  const categoryStr = typeof category == "string" ? category : undefined;
+  const products = await getAllProducts(queryStr, categoryStr);
 
   return (
     <div className="space-y-10 text-white">
@@ -22,6 +32,30 @@ export default async function Home({
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href={`?${createCategoryUrl(queryStr, undefined)}`}
+            className={`capitalize pill border ${categoryStr == undefined
+              ? "border-sky-200 bg-white/20 text-white"
+              : "border-white/20 bg-white/10 text-slate-200 hover:bg-white/20"
+              }`}
+          >
+            Semua
+          </Link>
+          {categories.map((cat) => (
+            <Link
+              href={`?${createCategoryUrl(queryStr, cat)}`}
+              key={cat}
+              className={`capitalize pill border ${categoryStr == cat
+                ? "border-sky-200 bg-white/20 text-white"
+                : "border-white/20 bg-white/10 text-slate-200 hover:bg-white/20"
+                }`}
+            >
+              {cat}
+            </Link>
+          ))}
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -41,8 +75,8 @@ export default async function Home({
                   </p>
                   <span
                     className={`pill ${product.status === "ready"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-amber-100 text-amber-800"
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-amber-100 text-amber-800"
                       }`}
                   >
                     {product.status === "ready" ? "Tersedia" : "Disewakan"}

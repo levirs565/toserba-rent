@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ReactNode } from "react";
 import { getCurrentUser } from "@/lib/auth"
+import { SearchForm } from "./SearchForm";
 
 const navItems: { href: string; label: string }[] = [
   { href: "/", label: "Beranda" },
@@ -36,17 +37,7 @@ export default async function Navbar() {
           </div>
         </Link>
 
-        <form className="relative ml-auto hidden flex-1 items-center md:flex" action="/" method="GET">
-          <input
-            name="q"
-            type="search"
-            placeholder="Cari kamera, alat musik, perabot..."
-            className="input bg-white/10 pr-12 text-sm"
-          />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-slate-200">
-            ⌕
-          </span>
-        </form>
+        <SearchForm/>
 
         <div className="flex items-center gap-3">
           {!user &&

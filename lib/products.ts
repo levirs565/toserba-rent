@@ -16,7 +16,7 @@ export async function getUserProducts() {
     include: {
       category: {
         select: {
-          name: true
+          name: true,
         },
       },
       _count: {
@@ -76,16 +76,29 @@ export async function getUserProducts() {
   }));
 }
 
-export async function getAllProducts(query: string | undefined) {
+export async function getAllProducts(
+  query: string | undefined,
+  category: string | undefined
+) {
+  let where: Extract<
+    Parameters<typeof prisma.product.findMany>[0],
+    {}
+  >["where"] = undefined;
+
+  if (query || category) {
+    where = {};
+    if (query) {
+      where.name = { contains: query, mode: "insensitive" };
+    }
+    if (category) {
+      where.category = {
+        name: category,
+      };
+    }
+  }
+
   const products = await prisma.product.findMany({
-    where: query
-      ? {
-          name: {
-            contains: query,
-            mode: "insensitive",
-          },
-        }
-      : undefined,
+    where,
     include: {
       category: {
         select: {
@@ -126,6 +139,16 @@ export async function getAllProducts(query: string | undefined) {
     pricePerDay: product.price,
     status: product._count.rents > 0 ? "rented" : "ready",
   }));
+}
+
+export async function getAllCategories() {
+  return (
+    await prisma.productCategory.findMany({
+      select: {
+        name: true,
+      },
+    })
+  ).map((it) => it.name);
 }
 
 export async function getProduct(id: string) {
@@ -186,8 +209,8 @@ export async function getProductWithRent(id: string) {
     include: {
       category: {
         select: {
-          name: true
-        }
+          name: true,
+        },
       },
       rents: {
         where: {
