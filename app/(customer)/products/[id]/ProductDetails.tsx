@@ -41,7 +41,7 @@ export function ProductDetails({ product, inCart, userId, isLogged, addresses }:
               <h1 className="text-2xl font-bold text-slate-900">
                 {product.name}
               </h1>
-              {/* <p className="text-slate-500">{product.location}</p> */}
+              <p className="text-slate-500">{product.address?.address}</p>
             </div>
             <span
               className={`pill ${product.status === "ready"

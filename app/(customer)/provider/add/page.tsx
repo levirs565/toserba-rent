@@ -3,9 +3,13 @@ import { formatIDR } from "@/app/lib/products";
 import { AddProduct } from "./AddProduct";
 import { getSession } from "@/lib/session";
 import { notFound } from "next/navigation";
+import { getUserAddress } from "@/lib/user";
 
 export default async function ProviderPage() {
   if (!(await getSession()).userId) return notFound();
+  const addresses = await getUserAddress();
+
+  if (!addresses) return;
 
   return <div className="space-y-6 text-white">
     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -16,6 +20,6 @@ export default async function ProviderPage() {
       </div>
     </div>
 
-    <AddProduct />
+    <AddProduct addresses={addresses} />
   </div>
 }

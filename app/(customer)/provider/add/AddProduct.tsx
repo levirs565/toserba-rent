@@ -1,6 +1,6 @@
 "use client";
 import { addProduct } from "@/lib/actions/product";
-import { ChangeEvent, useActionState } from "react";
+import { ChangeEvent, useActionState, useState } from "react";
 
 const SIZE_LIMIT = 1024 * 1024;
 function checkSizeLimit(event: ChangeEvent) {
@@ -11,9 +11,8 @@ function checkSizeLimit(event: ChangeEvent) {
   }
 }
 
-export function AddProduct() {
+export function AddProduct({ addresses }: { addresses: { id: string, name: string, address: string }[] }) {
   const [state, action, pending] = useActionState(addProduct, null)
-
   return <div className="card space-y-4 border-white/10 bg-white/10 p-6">
     <h2 className="text-lg font-semibold text-slate-700">
       Barang Baru
@@ -77,7 +76,7 @@ export function AddProduct() {
         />
       </div>
       <div className="space-y-1">
-        <label className="text-sm text-slate-100 text-slate-500">
+        <label className="text-sm font-semibold text-slate-500">
           Gambar Produk
           <input
             name="image"
@@ -88,6 +87,14 @@ export function AddProduct() {
             required
           />
         </label>
+      </div>
+      <div className="space-y-1">
+        <label className="text-sm font-semibold text-slate-500">
+          Alamat Produk (Tambah di Profil Jika Kosong)
+        </label>
+        <select name="address" className="w-full" required>
+          {addresses.map((address) => <option key={address.id} value={address.id}>{address.name} ({address.address})</option>)}
+        </select>
       </div>
       {state?.errors.price && <p>{state.errors.price}</p>}
       <button className="btn btn-primary w-full" type="submit">

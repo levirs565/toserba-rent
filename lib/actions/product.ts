@@ -12,9 +12,10 @@ export async function addProduct(state: any, formData: FormData) {
     name: String(formData.get("name")),
     category: String(formData.get("category")),
     price: parseInt(String(formData.get("price"))),
-    description: String(formData.get("description"))
+    description: String(formData.get("description")),
+    address: String(formData.get("address")),
   };
-  const image = formData.get("image")
+  const image = formData.get("image");
   const validatedFields = AddProductFormSchema.safeParse(fields);
 
   if (!validatedFields.success) {
@@ -36,7 +37,7 @@ export async function addProduct(state: any, formData: FormData) {
 
   const result = await prisma.product.create({
     select: {
-      id: true
+      id: true,
     },
     data: {
       name: data.name,
@@ -45,23 +46,29 @@ export async function addProduct(state: any, formData: FormData) {
       descripton: data.description,
       user: {
         connect: {
-          id: userId
-        }
+          id: userId,
+        },
+      },
+      address: {
+        connect: {
+          id: data.address,
+          userId: userId,
+        },
       },
       category: {
         connectOrCreate: {
           where: {
-            name: data.category
+            name: data.category,
           },
           create: {
-            name: data.category
-          }
-        }
+            name: data.category,
+          },
+        },
       },
     },
   });
-  
-  await storage.setItemRaw(`/products/${result.id}/image`, await image.bytes())
+
+  await storage.setItemRaw(`/products/${result.id}/image`, await image.bytes());
 
   redirect("/provider");
 }

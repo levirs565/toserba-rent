@@ -49,8 +49,9 @@ model UserAddress {
 
   userId String @map("user_id") @db.Uuid
 
-  user  User   @relation(fields: [userId], references: [id])
-  rents Rent[]
+  user     User      @relation(fields: [userId], references: [id])
+  rents    Rent[]
+  products Product[]
 
   @@unique([id, userId])
   @@map("user_addresses")
@@ -65,10 +66,12 @@ model Product {
 
   userId     String  @db.Uuid
   categoryId String? @map("category_id") @db.Uuid
+  addressId  String? @map("address_id") @db.Uuid
 
   user     User             @relation(fields: [userId], references: [id])
   category ProductCategory? @relation(fields: [categoryId], references: [id])
   rents    Rent[]
+  address  UserAddress?     @relation(fields: [addressId], references: [id])
 
   @@map("products")
 }

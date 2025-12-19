@@ -58,6 +58,7 @@ export const AddProductFormSchema = z.object({
     .min(10, { error: "Be at least 10 characters long" })
     .trim(),
   price: z.int(),
+  address: z.uuid()
 });
 
 export const AddCartSchema = z.object({

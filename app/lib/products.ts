@@ -7,6 +7,10 @@ export type Product = {
   pricePerDay: number;
   description: string;
   status: ProductStatus;
+  address?: {
+    name: string
+    address: string
+  }
 };
 
 export function formatIDR(value: number) {

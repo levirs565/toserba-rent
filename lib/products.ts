@@ -157,6 +157,12 @@ export async function getProduct(id: string) {
       id,
     },
     include: {
+      address: {
+        select: {
+          name: true,
+          address: true
+        },
+      },
       category: {
         select: {
           name: true,
@@ -195,6 +201,7 @@ export async function getProduct(id: string) {
     id: product.id,
     name: product.name,
     category: product.category?.name ?? "Other",
+    address: product.address,
     description: product.descripton,
     pricePerDay: product.price,
     status: product._count.rents > 0 ? "rented" : "ready",
@@ -212,6 +219,12 @@ export async function getProductWithRent(id: string) {
       id,
     },
     include: {
+      address: {
+        select: {
+          name: true,
+          address: true,
+        },
+      },
       category: {
         select: {
           name: true,
@@ -233,8 +246,8 @@ export async function getProductWithRent(id: string) {
           deliverAddress: {
             select: {
               name: true,
-              address: true
-            }
+              address: true,
+            },
           },
           requestState: true,
           cart: {
@@ -264,10 +277,10 @@ export async function getProductWithRent(id: string) {
   return {
     id: product.id,
     name: product.name,
+    address: product.address,
     category: product.category?.name ?? "Other",
     pricePerDay: product.price,
     status: "ready",
-    location: "",
     description: product.descripton,
     rents: product.rents.map((rent) => ({
       id: rent.id,
