@@ -53,11 +53,11 @@ model UserAddress {
 }
 
 model Product {
-  id    String   @id @default(uuid()) @db.Uuid
-  name  String
-  price Int
-  specs String[]
-  stock Int
+  id         String @id @default(uuid()) @db.Uuid
+  name       String
+  price      Int
+  descripton String @default("")
+  stock      Int
 
   userId     String  @db.Uuid
   categoryId String? @map("category_id") @db.Uuid

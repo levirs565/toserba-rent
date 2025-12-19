@@ -65,8 +65,9 @@ export default async function Home({
               key={product.id}
               className="card group flex h-full flex-col overflow-hidden border-white/10 bg-white/90 transition hover:-translate-y-1 hover:shadow-2xl"
             >
-              <div
-                className="h-40 w-full"
+              <img
+                src={`/api/get-product-image/${product.id}`}
+                className="h-40 w-full object-cover"
               />
               <div className="flex flex-1 flex-col gap-3 p-4">
                 <div className="flex items-center justify-between">

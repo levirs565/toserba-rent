@@ -5,6 +5,7 @@ export type Product = {
   name: string;
   category: string;
   pricePerDay: number;
+  description: string;
   status: ProductStatus;
 };
 

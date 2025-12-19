@@ -48,7 +48,15 @@ export const SendProfileSchema = z.object({
 
 export const AddProductFormSchema = z.object({
   name: z.string().min(4, { error: "Be at least 4 characters long" }).trim(),
-  category: z.string().min(4, { error: "Be at least 4 characters long" }).trim().toLowerCase(),
+  category: z
+    .string()
+    .min(4, { error: "Be at least 4 characters long" })
+    .trim()
+    .toLowerCase(),
+  description: z
+    .string()
+    .min(10, { error: "Be at least 10 characters long" })
+    .trim(),
   price: z.int(),
 });
 

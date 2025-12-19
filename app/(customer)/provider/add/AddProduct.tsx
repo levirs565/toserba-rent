@@ -1,6 +1,15 @@
 "use client";
 import { addProduct } from "@/lib/actions/product";
-import { useActionState } from "react";
+import { ChangeEvent, useActionState } from "react";
+
+const SIZE_LIMIT = 1024 * 1024;
+function checkSizeLimit(event: ChangeEvent) {
+  const element = event.currentTarget as HTMLInputElement
+  if (element.files![0].size > SIZE_LIMIT) {
+    alert("File is too big")
+    element.value = ""
+  }
+}
 
 export function AddProduct() {
   const [state, action, pending] = useActionState(addProduct, null)
@@ -22,6 +31,8 @@ export function AddProduct() {
           defaultValue={state?.name}
           className="input bg-white/10 text-slate-700!"
           placeholder="Contoh: Kamera DSLR Pro"
+          minLength={4}
+          required
         />
         {state?.errors.name && <p>{state.errors.name}</p>}
       </div>
@@ -34,8 +45,23 @@ export function AddProduct() {
           className="input bg-white/10 text-slate-700!"
           defaultValue={state?.category}
           placeholder="Kamera, Audio, Fashion..."
+          minLength={4}
+          required
         />
         {state?.errors.category && <p>{state.errors.category}</p>}
+      </div>
+      <div className="space-y-1">
+        <label className="text-sm font-semibold text-slate-500">
+          Deskripsi
+        </label>
+        <textarea
+          name="description"
+          className="input bg-white/10 text-slate-700!"
+          defaultValue={state?.description}
+          minLength={10}
+          required
+        />
+        {state?.errors.description && <p>{state.errors.description}</p>}
       </div>
       <div className="space-y-1">
         <label className="text-sm font-semibold text-slate-500">
@@ -47,7 +73,21 @@ export function AddProduct() {
           defaultValue={state?.price}
           className="input bg-white/10 text-slate-700!"
           placeholder="Contoh: 250000"
+          required
         />
+      </div>
+      <div className="space-y-1">
+        <label className="text-sm text-slate-100 text-slate-500">
+          Gambar Produk
+          <input
+            name="image"
+            type="file"
+            accept="image/*"
+            className="input bg-white/10 text-slate-700!"
+            onChange={checkSizeLimit}
+            required
+          />
+        </label>
       </div>
       {state?.errors.price && <p>{state.errors.price}</p>}
       <button className="btn btn-primary w-full" type="submit">

@@ -195,6 +195,7 @@ export async function getProduct(id: string) {
     id: product.id,
     name: product.name,
     category: product.category?.name ?? "Other",
+    description: product.descripton,
     pricePerDay: product.price,
     status: product._count.rents > 0 ? "rented" : "ready",
     userId: product.userId,
@@ -257,8 +258,7 @@ export async function getProductWithRent(id: string) {
     pricePerDay: product.price,
     status: "ready",
     location: "",
-    description: "",
-    imageColor: "",
+    description: product.descripton,
     rents: product.rents.map((rent) => ({
       id: rent.id,
       startDate: rent.startDate,
