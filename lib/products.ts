@@ -230,6 +230,12 @@ export async function getProductWithRent(id: string) {
           startDate: true,
           durationDay: true,
           needDeliver: true,
+          deliverAddress: {
+            select: {
+              name: true,
+              address: true
+            }
+          },
           requestState: true,
           cart: {
             select: {
@@ -273,6 +279,7 @@ export async function getProductWithRent(id: string) {
         id: rent.cart.user.id,
         name: rent.cart.user.name,
       },
+      deliverAddress: rent.deliverAddress,
       rentReturn: rent.rentReturn,
     })),
   };

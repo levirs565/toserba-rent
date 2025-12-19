@@ -64,6 +64,7 @@ export const AddCartSchema = z.object({
   id: z.uuid(),
   durationDay: z.int(),
   needDeliver: z.boolean(),
+  address: z.uuid().optional()
 });
 
 export type AddCartData = z.infer<typeof AddCartSchema>;

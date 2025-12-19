@@ -49,8 +49,10 @@ model UserAddress {
 
   userId String @map("user_id") @db.Uuid
 
-  user User @relation(fields: [userId], references: [id])
+  user  User   @relation(fields: [userId], references: [id])
+  rents Rent[]
 
+  @@unique([id, userId])
   @@map("user_addresses")
 }
 
@@ -107,11 +109,13 @@ model Rent {
   rentPrice   Int?      @map("rent_price")
   needDeliver Boolean   @map("need_deliver")
 
-  productId String @map("product_id") @db.Uuid
-  cartId    String @map("cart_id") @db.Uuid
+  deliverAddressId String? @map("deliver_address_id") @db.Uuid
+  productId        String  @map("product_id") @db.Uuid
+  cartId           String  @map("cart_id") @db.Uuid
 
-  product Product @relation(fields: [productId], references: [id])
-  cart    Cart    @relation(fields: [cartId], references: [id])
+  product        Product      @relation(fields: [productId], references: [id])
+  cart           Cart         @relation(fields: [cartId], references: [id])
+  deliverAddress UserAddress? @relation(fields: [deliverAddressId], references: [id])
 
   requestState RequestState @default(PENDING)
   rentReturn   RentReturn?

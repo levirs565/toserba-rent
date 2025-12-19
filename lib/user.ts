@@ -94,3 +94,22 @@ export async function getCurrentUserProfile() {
     addresses: userAddresses,
   };
 }
+
+export async function getUserAddress() {
+  const session = await getSession();
+
+  if (!session.userId) return null;
+
+  const data = await prisma.userAddress.findMany({
+    where: {
+      userId: session.userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      address: true,
+    },
+  });
+
+  return data;
+}

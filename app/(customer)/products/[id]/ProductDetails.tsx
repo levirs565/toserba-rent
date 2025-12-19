@@ -9,9 +9,10 @@ import { startTransition, useActionState, useState } from "react";
 const durations = [1, 3, 5, 7, 14];
 
 
-export function ProductDetails({ product, inCart, userId, isLogged }: { product: Product, inCart: boolean, userId: string, isLogged: boolean }) {
+export function ProductDetails({ product, inCart, userId, isLogged, addresses }: { product: Product, inCart: boolean, userId: string, isLogged: boolean, addresses: { id: string, name: string, address: string }[] | null }) {
   const [cartState, cartAction, _cartPending] = useActionState(addCart, null)
   const [days, setDays] = useState(3);
+  const [selectedAdress, setSelectedAddress] = useState(addresses?.at(0)?.id);
   const [delivery, setDelivery] = useState(false);
 
   const total = calculatePrice(product.pricePerDay, days, delivery);
@@ -20,6 +21,8 @@ export function ProductDetails({ product, inCart, userId, isLogged }: { product:
     const params = new URLSearchParams()
     params.set("durationDays", String(days))
     params.set("needDeliver", String(delivery))
+    if (selectedAdress)
+      params.set("address", selectedAdress)
     return params.toString()
   }
 
@@ -89,37 +92,28 @@ export function ProductDetails({ product, inCart, userId, isLogged }: { product:
                 <p className="text-sm font-semibold text-slate-800">
                   Pilih alamat antar
                 </p>
-                <p className="text-slate-500">
-                  Klik untuk menampilkan peta & pilih titik antar
-                </p>
+                {(!addresses || addresses.length == 0) &&
+                  <p className="text-slate-500">
+                    Fitur ini hanya tersedia setelah menambahkan alamat di profil
+                  </p>
+                }
               </div>
-              <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-slate-800">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4"
-                  checked={delivery}
-                  onChange={(e) => setDelivery(e.target.checked)}
-                />
-                Perlu antar
-              </label>
-            </div>
-            {delivery && (
-              <div className="space-y-2">
-                <div className="h-52 overflow-hidden rounded-lg border border-slate-200">
-                  <iframe
-                    title="map"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.706108873379!2d106.81928967576874!3d-6.174465893819702!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e67cd68e99%3A0xa37210203a8a14!2sMonas!5e0!3m2!1sid!2sid!4v1715176400000!5m2!1sid!2sid"
-                    width="100%"
-                    height="100%"
-                    loading="lazy"
-                    style={{ border: 0 }}
+              {addresses && addresses.length > 0 &&
+                <label className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-slate-800">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4"
+                    checked={delivery}
+                    onChange={(e) => setDelivery(e.target.checked)}
                   />
-                </div>
-                <p className="text-xs text-slate-500">
-                  Pilih titik pada peta untuk alamat antar favorit Anda.
-                  Biaya antar ditambahkan ke total.
-                </p>
-              </div>
+                  Perlu antar
+                </label>
+              }
+            </div>
+            {delivery && addresses && addresses.length > 0 && (
+              <select className="w-full" value={selectedAdress} onChange={(e) => setSelectedAddress(e.currentTarget.value)}>
+                {addresses.map((address) => <option key={address.id} value={address.id}>{address.name} ({address.address})</option>)}
+              </select>
             )}
           </div>
           <Link href={`/messages/${userId}`} className="btn btn-primary text-center space-y-3">Chat Pemilik</Link>
@@ -162,7 +156,7 @@ export function ProductDetails({ product, inCart, userId, isLogged }: { product:
             {!(cartState?.success || inCart) &&
               <>
                 <button
-                  onClick={() => startTransition(() => cartAction({ id: product.id, durationDay: days, needDeliver: delivery }))}
+                  onClick={() => startTransition(() => cartAction({ id: product.id, durationDay: days, needDeliver: delivery, address: selectedAdress }))}
                   className="btn btn-primary w-full text-center"
                 >
                   Add to Cart

@@ -6,6 +6,7 @@ import { ProductDetails } from "./ProductDetails";
 import { Product } from "@/app/lib/products";
 import { isInCart } from "@/lib/cart";
 import { getSession } from "@/lib/session";
+import { getUserAddress } from "@/lib/user";
 
 export default async function ProductDetail({
   params,
@@ -18,7 +19,8 @@ export default async function ProductDetail({
 
   const inCart = await isInCart(productId)
   const isLogged = !!(await getSession()).userId;
+  const addresses = await getUserAddress();
 
-  return <ProductDetails product={product as Product} inCart={inCart} userId={product.userId} isLogged={isLogged}/>
+  return <ProductDetails product={product as Product} inCart={inCart} userId={product.userId} isLogged={isLogged} addresses={addresses}/>
 }
 

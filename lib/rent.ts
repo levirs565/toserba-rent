@@ -10,6 +10,9 @@ export async function getUserRents() {
     where: {
       cart: {
         userId: id,
+        paymentId: {
+          not: null
+        }
       },
     },
     select: {

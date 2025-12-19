@@ -63,7 +63,7 @@ export default async function ProductDetail({
             {rent.startDate?.toISOString().split('T')[0] ?? "."} - {rent.durationDay} hari
           </p>
           <p className="text-sm text-slate-500">
-            {rent.needDeliver ? "Perlu Dikirim" : "Diambil Sendiri"}
+            {rent.needDeliver ? `Perlu Dikirim ke ${rent.deliverAddress?.name} (${rent.deliverAddress?.address})` : "Diambil Sendiri"}
           </p>
           {rent.rentReturn?.requestState == "ACCEPTED" &&
             <span
@@ -101,7 +101,7 @@ export default async function ProductDetail({
             {rent.startDate?.toISOString().split('T')[0] ?? "."} - {rent.durationDay} hari
           </p>
           <p className="text-sm text-slate-500">
-            {rent.needDeliver ? "Perlu Dikirim" : "Diambil Sendiri"}
+            {rent.needDeliver ? `Perlu Dikirim ke ${rent.deliverAddress?.name} (${rent.deliverAddress?.address})` : "Diambil Sendiri"}
           </p>
           <form className="flex flex-row gap-3 mt-2">
             <Link href={`/messages/${rent.user.id}`} className="block btn flex-grow btn-primary text-center space-y-3">Chat Penyewa</Link>
@@ -134,7 +134,7 @@ export default async function ProductDetail({
             {rent.startDate?.toISOString().split('T')[0] ?? "."} - {rent.durationDay} hari
           </p>
           <p className="text-sm text-slate-500">
-            {rent.needDeliver ? "Perlu Dikirim" : "Diambil Sendiri"}
+            {rent.needDeliver ? `Perlu Dikirim ke ${rent.deliverAddress?.name} (${rent.deliverAddress?.address})` : "Diambil Sendiri"}
           </p>
           <span
             className={`mt-2 pill bg-amber-100 text-amber-700`}

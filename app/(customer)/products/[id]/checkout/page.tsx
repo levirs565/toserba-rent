@@ -22,6 +22,9 @@ export default async function ProductCheckoutPage({
   const durationDays = parseInt(String(urlParams["durationDays"]))
   if (isNaN(durationDays)) return notFound()
   const needDeliver = String(urlParams["needDeliver"]) == String(true);
+  const address = urlParams["address"]
+
+  if (typeof address == "object") return notFound();
 
   const items = [{
     name: `${product.name} (50%)`,
@@ -50,5 +53,5 @@ export default async function ProductCheckoutPage({
       </div>
     </div>
   }
-  return <Checkout items={items} onSubmit={payProduct.bind(null, { id, durationDay: durationDays, needDeliver })} />
+  return <Checkout items={items} onSubmit={payProduct.bind(null, { id, durationDay: durationDays, needDeliver, address })} />
 }

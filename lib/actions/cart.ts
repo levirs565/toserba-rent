@@ -18,6 +18,11 @@ export async function addCart(state: any, rawData: AddCartData) {
 
   const data = validatedFields.data;
 
+  if (data.needDeliver && !data.address)
+    return {
+      success: false,
+    };
+
   const userId = (await getSession()).userId;
 
   if (!userId)
@@ -49,8 +54,24 @@ export async function addCart(state: any, rawData: AddCartData) {
 
   await prisma.rent.create({
     data: {
-      cartId: cart.id,
-      productId: data.id,
+      cart: {
+        connect: {
+          id: cart.id,
+        },
+      },
+      product: {
+        connect: {
+          id: data.id,
+        },
+      },
+      deliverAddress: !data.needDeliver
+        ? undefined
+        : {
+            connect: {
+              id: data.address ?? "NEVER",
+              userId: userId,
+            },
+          },
       durationDay: data.durationDay,
       needDeliver: data.needDeliver,
     },
@@ -71,12 +92,12 @@ export async function removeCart(rentId: string) {
       id: rentId,
       cart: {
         paymentId: null,
-        userId
-      }
-    }
-  })
+        userId,
+      },
+    },
+  });
 
-  revalidatePath("/cart")
+  revalidatePath("/cart");
 }
 
 export async function payCart() {
@@ -161,6 +182,11 @@ export async function payProduct(rawData: AddCartData) {
 
   const data = validatedFields.data;
 
+  if (data.needDeliver && !data.address)
+    return {
+      success: false,
+    };
+
   const userId = (await getSession()).userId;
 
   if (!userId)
@@ -195,8 +221,16 @@ export async function payProduct(rawData: AddCartData) {
               durationDay: data.durationDay,
               needDeliver: data.needDeliver,
               startDate: new Date(),
-              productId: data.id,
+              product: { connect: { id: data.id } },
               rentPrice: product.price,
+              deliverAddress: !data.needDeliver
+                ? undefined
+                : {
+                    connect: {
+                      id: data.address ?? "NEVER",
+                      userId: userId,
+                    },
+                  },
             },
           },
         },
