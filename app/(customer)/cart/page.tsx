@@ -3,9 +3,12 @@ import { formatIDR } from "../../lib/products";
 import { getCartProducts } from "@/lib/cart";
 import { calculatePrice } from "../../lib/utils";
 import { removeCart } from "@/lib/actions/cart";
+import { notFound } from "next/navigation";
 
 export default async function CartPage() {
   const cartItems = await getCartProducts();
+
+  if (cartItems == null) return notFound();
 
   return (
     <div className="space-y-6 text-white">

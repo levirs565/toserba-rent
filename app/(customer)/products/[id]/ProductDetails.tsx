@@ -9,7 +9,7 @@ import { startTransition, useActionState, useState } from "react";
 const durations = [1, 3, 5, 7, 14];
 
 
-export function ProductDetails({ product, inCart, userId }: { product: Product, inCart: boolean, userId: string }) {
+export function ProductDetails({ product, inCart, userId, isLogged }: { product: Product, inCart: boolean, userId: string, isLogged: boolean }) {
   const [cartState, cartAction, _cartPending] = useActionState(addCart, null)
   const [days, setDays] = useState(3);
   const [delivery, setDelivery] = useState(false);
@@ -132,9 +132,10 @@ export function ProductDetails({ product, inCart, userId }: { product: Product, 
           <h2 className="text-lg font-semibold text-slate-900">
             Ringkasan Sewa
           </h2>
-          <Link href="/cart" className="text-sm font-semibold text-sky-600">
-            Lihat keranjang
-          </Link>
+          {isLogged &&
+            <Link href="/cart" className="text-sm font-semibold text-sky-600">
+              Lihat keranjang
+            </Link>}
         </div>
 
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -156,32 +157,36 @@ export function ProductDetails({ product, inCart, userId }: { product: Product, 
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
-          {!(cartState?.success || inCart) &&
-            <>
-              <button
-                onClick={() => startTransition(() => cartAction({ id: product.id, durationDay: days, needDeliver: delivery }))}
-                className="btn btn-primary w-full text-center"
+        {isLogged &&
+          <div className="flex flex-col gap-3">
+            {!(cartState?.success || inCart) &&
+              <>
+                <button
+                  onClick={() => startTransition(() => cartAction({ id: product.id, durationDay: days, needDeliver: delivery }))}
+                  className="btn btn-primary w-full text-center"
+                >
+                  Add to Cart
+                </button>
+              </>
+            }
+
+            {(cartState?.success || inCart) && (
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                Telah ditambahkan ke Keranjang
+              </div>
+            )}
+
+            {product.status == "ready" &&
+              <Link
+                href={`/products/${product.id}/checkout?` + createCheckoutParams()}
+                className="btn w-full bg-slate-900 text-center text-white! hover:bg-slate-800"
               >
-                Add to Cart
-              </button>
-            </>
-          }
-
-          {(cartState?.success || inCart) && (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-              Telah ditambahkan ke Keranjang
-            </div>
-          )}
-
-          {product.status == "ready" &&
-            <Link
-              href={`/products/${product.id}/checkout?` + createCheckoutParams()}
-              className="btn w-full bg-slate-900 text-center text-white! hover:bg-slate-800"
-            >
-              Sewa Sekarang
-            </Link>}
-        </div>
+                Sewa Sekarang
+              </Link>}
+          </div>}
+        {!isLogged && <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          Login untuk Menyewa
+        </div>}
       </div>
     </div>
   );

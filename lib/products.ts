@@ -7,7 +7,7 @@ import { getSession } from "./session";
 export async function getUserProducts() {
   const userId = (await getSession()).userId;
 
-  if (!userId) return [];
+  if (!userId) return null;
 
   const products = await prisma.product.findMany({
     where: {
@@ -203,6 +203,10 @@ export async function getProduct(id: string) {
 }
 
 export async function getProductWithRent(id: string) {
+  const userId = (await getSession()).userId;
+
+  if (!userId) return;
+
   const product = await prisma.product.findUnique({
     where: {
       id,
@@ -249,7 +253,7 @@ export async function getProductWithRent(id: string) {
     },
   });
 
-  if (!product) return null;
+  if (!product || product.userId != userId) return null;
 
   return {
     id: product.id,

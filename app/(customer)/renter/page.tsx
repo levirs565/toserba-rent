@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { getUserRents } from "@/lib/rent";
 import { returnRent } from "@/lib/actions/rent";
+import { notFound } from "next/navigation";
 
 export default async function ProviderPage() {
   const rents = await getUserRents();
+
+  if (rents == null) return notFound();
 
   return <div className="space-y-6 text-white">
     <div className="flex flex-wrap items-center justify-between gap-3">

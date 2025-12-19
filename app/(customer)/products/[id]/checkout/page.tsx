@@ -1,6 +1,7 @@
 import { Checkout } from "@/app/(customer)/components/Checkout";
 import { payProduct } from "@/lib/actions/cart";
 import { getProduct } from "@/lib/products";
+import { getSession } from "@/lib/session";
 import { SearchParams } from "next/dist/server/request/search-params";
 import { notFound } from "next/navigation";
 
@@ -11,6 +12,8 @@ export default async function ProductCheckoutPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<SearchParams>
 }) {
+  if (!(await getSession()).userId) return notFound();
+
   const id = (await params).id
   const product = await getProduct(id)
   if (!product) return notFound();

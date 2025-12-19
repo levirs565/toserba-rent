@@ -4,7 +4,7 @@ import { getSession } from "./session";
 export async function getUserRents() {
   const id = (await getSession()).userId;
 
-  if (!id) return [];
+  if (!id) return null;
 
   const data = await prisma.rent.findMany({
     where: {

@@ -1,9 +1,12 @@
 import { getCartProducts } from "@/lib/cart";
 import { Checkout } from "../../components/Checkout";
 import { payCart } from "@/lib/actions/cart";
+import { notFound } from "next/navigation";
 
 export default async function CheckoutPage() {
   const items = await getCartProducts()
+
+  if (items == null) return notFound();
 
   const checkoutItems: { name: string, price: number }[] = [];
   const rentedItems: typeof items = []

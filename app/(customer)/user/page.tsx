@@ -1,4 +1,5 @@
 import { VerificationState } from "@/app/generated/prisma/enums";
+import { logout } from "@/lib/actions/auth";
 import { getCurrentUser, getCurrentUserProfile } from "@/lib/user";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -41,6 +42,9 @@ export default async function UserInfoPage() {
           {user.verificationState != "ACCEPTED" && <Link href="/verify" className="block btn flex-grow btn-primary text-center">
             Halaman Verifikasi Identitas
           </Link>}
+          <form className="flex-grow">
+            <button formAction={logout} className="block w-full btn btn-primary text-center">Logout</button>
+          </form>
         </div>
 
         <div className="card space-y-3 border-white/10 bg-white/90 p-6 text-slate-900">

@@ -4,7 +4,7 @@ import { register } from "@/lib/actions/auth";
 import Link from "next/link";
 import { useActionState } from "react";
 
-export default function RegisterPage() {
+export default function RegisterPage() {  
   const [state, action, pending] = useActionState(register, null)
 
   return (

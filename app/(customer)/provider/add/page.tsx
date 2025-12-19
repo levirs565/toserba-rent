@@ -1,8 +1,12 @@
 import { getUserProducts } from "@/lib/products";
 import { formatIDR } from "@/app/lib/products";
 import { AddProduct } from "./AddProduct";
+import { getSession } from "@/lib/session";
+import { notFound } from "next/navigation";
 
 export default async function ProviderPage() {
+  if (!(await getSession()).userId) return notFound();
+
   return <div className="space-y-6 text-white">
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div>
@@ -12,6 +16,6 @@ export default async function ProviderPage() {
       </div>
     </div>
 
-      <AddProduct />
+    <AddProduct />
   </div>
 }

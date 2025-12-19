@@ -101,3 +101,11 @@ export async function login(state: any, formData: FormData) {
 
   redirect("/");
 }
+
+export async function logout() {
+    const session = await getSession();
+  session.userId = undefined;
+  await session.save();
+
+  redirect("/")
+}

@@ -1,9 +1,12 @@
 import { getUserProducts } from "@/lib/products";
 import { formatIDR } from "@/app/lib/products";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 export default async function ProviderPage() {
   const products = await getUserProducts();
+
+  if (products == null) return notFound();
 
   return <div className="space-y-6 text-white">
     <div className="flex flex-wrap items-center justify-between gap-3">

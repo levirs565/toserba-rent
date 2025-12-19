@@ -3,14 +3,6 @@ import { ReactNode } from "react";
 import { getCurrentUser } from "@/lib/auth"
 import { SearchForm } from "./SearchForm";
 
-const navItems: { href: string; label: string }[] = [
-  { href: "/", label: "Beranda" },
-  { href: "/cart", label: "Keranjang" },
-  { href: "/messages", label: "Pesan" },
-  { href: "/provider", label: "Penyedia" },
-  { href: "/renter", label: "Penyewa" }
-];
-
 function Icon({ children }: { children: ReactNode }) {
   return (
     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-lg text-white">
@@ -21,6 +13,19 @@ function Icon({ children }: { children: ReactNode }) {
 
 export default async function Navbar() {
   const user = await getCurrentUser();
+
+  const navItems: { href: string; label: string }[] = [
+    { href: "/", label: "Beranda" },
+  ];
+
+  if (user) {
+    navItems.push(
+      { href: "/cart", label: "Keranjang" },
+      { href: "/messages", label: "Pesan" },
+      { href: "/provider", label: "Penyedia" },
+      { href: "/renter", label: "Penyewa" }
+    )
+  }
 
   return (
     <header className="sticky top-0 z-30 border-b border-white/5 bg-[#0f1f38]/85 backdrop-blur-md">
@@ -37,7 +42,7 @@ export default async function Navbar() {
           </div>
         </Link>
 
-        <SearchForm/>
+        <SearchForm />
 
         <div className="flex items-center gap-3">
           {!user &&

@@ -19,7 +19,7 @@ export async function isInCart(productId: string) {
 
 export async function getCartProducts() {
   const userId = (await getSession()).userId;
-  if (!userId) return [];
+  if (!userId) return null;
   const cart = await prisma.cart.findFirst({
     where: {
       userId,
