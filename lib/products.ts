@@ -36,6 +36,44 @@ export async function getUserProducts() {
     },
   });
 
+  const rentProductActiveCount = (
+    await prisma.product.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+        _count: {
+          select: {
+            rents: {
+              where: {
+                requestState: {
+                  not: RequestState.REJECTED,
+                },
+                cart: {
+                  paymentId: {
+                    not: null,
+                  },
+                },
+                OR: [
+                  { rentReturn: null },
+                  {
+                    rentReturn: {
+                      paymentId: null,
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    })
+  ).reduce((prev, current) => {
+    prev.set(current.id, current._count.rents);
+    return prev;
+  }, new Map<string, number>());
+
   const returnRequestCount = (
     await prisma.product.findMany({
       where: {
@@ -67,7 +105,7 @@ export async function getUserProducts() {
     category: product.category?.name ?? "Other",
     // TODO: Sratus
     pricePerDay: product.price,
-    status: "ready",
+    status: (rentProductActiveCount.get(product.id) ?? 0) > 0 ? "rented" : "ready",
     location: "",
     description: "",
     imageColor: "",
@@ -160,7 +198,7 @@ export async function getProduct(id: string) {
       address: {
         select: {
           name: true,
-          address: true
+          address: true,
         },
       },
       category: {
@@ -219,6 +257,30 @@ export async function getProductWithRent(id: string) {
       id,
     },
     include: {
+      _count: {
+        select: {
+          rents: {
+            where: {
+              requestState: {
+                not: RequestState.REJECTED,
+              },
+              cart: {
+                paymentId: {
+                  not: null,
+                },
+              },
+              OR: [
+                { rentReturn: null },
+                {
+                  rentReturn: {
+                    paymentId: null,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
       address: {
         select: {
           name: true,
@@ -280,7 +342,7 @@ export async function getProductWithRent(id: string) {
     address: product.address,
     category: product.category?.name ?? "Other",
     pricePerDay: product.price,
-    status: "ready",
+    status: product._count.rents > 0 ? "rented" : "ready",
     description: product.descripton,
     rents: product.rents.map((rent) => ({
       id: rent.id,
