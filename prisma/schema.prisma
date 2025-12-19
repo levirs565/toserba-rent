@@ -37,6 +37,8 @@ model User {
   outMessages ChatMessage[] @relation(name: "chat_message_from_user")
   inMessages  ChatMessage[] @relation(name: "chat_message_to_user")
 
+  isAdmin Boolean @default(false) @map("is_admin")
+
   @@map("users")
 }
 
